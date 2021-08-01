@@ -43,12 +43,12 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return storage[i];
-            }
+        int i;
+        if ((i = checkResume(uuid)) == -1) {
+            System.out.println("ERROR: резюме не существует!");
+            return null;
         }
-        return null;
+        return storage[i];
     }
 
     public void delete(String uuid) {
