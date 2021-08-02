@@ -4,13 +4,11 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.Arrays;
 
-import java.util.Scanner;
-
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
+    private final Resume[] storage = new Resume[10_000];
     private int size = 0;
 
     public void clear() {
@@ -19,11 +17,11 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        if (checkResume(r.getUuid()) != -1) {
-            System.out.println("ERROR: резюме уже существует!");
+        if (findIndex(r.getUuid()) != -1) {
+            System.out.println("ERROR: резюме " + r.getUuid() + " уже существует!");
             return;
         }
-        if (size == 10000) {
+        if (size == storage.length) {
             System.out.println("ERROR: Добавление резюме не возможно, БД переполнена!");
             return;
         }
@@ -32,34 +30,31 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-        int i;
-        if ((i = checkResume(resume.getUuid())) == -1) {
-            System.out.println("ERROR: резюме не существует!");
+        int index;
+        if ((index = findIndex(resume.getUuid())) == -1) {
+            System.out.println("ERROR: резюме " + resume.getUuid() + " не существует!");
             return;
         }
-        Scanner console = new Scanner(System.in);
-        System.out.print("Введите новый uuid: ");
-        storage[i].setUuid(console.nextLine());
+        storage[index]=resume;
     }
 
     public Resume get(String uuid) {
-        int i;
-        if ((i = checkResume(uuid)) == -1) {
-            System.out.println("ERROR: резюме не существует!");
+        int index;
+        if ((index = findIndex(uuid)) == -1) {
+            System.out.println("ERROR: резюме " + uuid + " не существует!");
             return null;
         }
-        return storage[i];
+        return storage[index];
     }
 
     public void delete(String uuid) {
-        int i;
-        if ((i = checkResume(uuid)) == -1) {
-            System.out.println("ERROR: резюме не существует!");
+        int index;
+        if ((index = findIndex(uuid)) == -1) {
+            System.out.println("ERROR: резюме " + uuid + " не существует!");
             return;
         }
-        storage[i] = null;
-        for (; i < size - 1; i++) {
-            storage[i] = storage[i + 1];
+        if (index < size - 1) {
+            System.arraycopy(storage, index+1, storage, index, size);
         }
         storage[size - 1] = null;
         size--;
@@ -76,10 +71,10 @@ public class ArrayStorage {
         return size;
     }
 
-    public int checkResume(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return i;
+    private int findIndex(String uuid) {
+        for (int index = 0; index < size; index++) {
+            if (storage[index].getUuid().equals(uuid)) {
+                return index;
             }
         }
         return -1;
