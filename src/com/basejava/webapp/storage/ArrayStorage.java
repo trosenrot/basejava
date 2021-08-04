@@ -54,7 +54,7 @@ public class ArrayStorage {
             return;
         }
         if (index < size - 1) {
-            System.arraycopy(storage, index + 1, storage, index, size - 1);
+            System.arraycopy(storage, index + 1, storage, index, (size - 1) - index);
         }
         storage[size - 1] = null;
         size--;
