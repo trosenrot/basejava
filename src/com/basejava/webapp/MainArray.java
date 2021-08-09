@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
  */
 public class MainArray {
     private final static ArrayStorage ARRAY_STORAGE = new ArrayStorage();
-//    static final SortedArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
+//    private final SortedArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

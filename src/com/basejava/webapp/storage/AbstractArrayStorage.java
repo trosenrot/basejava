@@ -22,7 +22,6 @@ public abstract class AbstractArrayStorage implements Storage {
             return;
         }
         storage[index] = resume;
-        sort();
     }
 
     public final void save(Resume r) {
@@ -34,9 +33,8 @@ public abstract class AbstractArrayStorage implements Storage {
             System.out.println("ERROR: Добавление резюме не возможно, БД переполнена!");
             return;
         }
-        storage[size] = r;
+        saveToArray(r);
         size++;
-        sort();
     }
 
     public final Resume get(String uuid) {
@@ -74,6 +72,5 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected abstract int findIndex(String uuid);
 
-    protected void sort() {
-    }
+    protected abstract void saveToArray(Resume resume);
 }
