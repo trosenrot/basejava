@@ -101,7 +101,7 @@ public class AbstractArrayStorageTest {
                 storage.save(new Resume());
             }
         } catch (StorageException e) {
-            Assert.fail("Неправильное заполнение БД! БД переполнена!");
+            Assert.fail("Переполнение произошло раньше времени!");
         }
         storage.save(new Resume());
     }
