@@ -12,13 +12,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size = 0;
 
     @Override
-    public final void clear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     @Override
-    protected final void saving(Resume resume, int index) {
+    protected final void saveResume(Resume resume, int index) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("БД переполнена!", resume.getUuid());
         }
@@ -27,7 +27,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void deletion(int index) {
+    protected void deleteResume(int index, String uuid) {
         if (index < size - 1) {
             System.arraycopy(storage, index + 1, storage, index, (size - 1) - index);
         }
@@ -36,12 +36,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void updating(Resume resume, int index) {
+    protected void updateResume(Resume resume, int index) {
         storage[index] = resume;
     }
 
     @Override
-    protected final Resume getting(int index) {
+    protected Resume getResume(int index, String uuid) {
         return storage[index];
     }
 
@@ -55,7 +55,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public final int size() {
+    public int size() {
         return size;
     }
 

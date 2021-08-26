@@ -24,17 +24,17 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void saving(Resume resume, int index) {
+    protected final void saveResume(Resume resume, int index) {
         list.add(resume);
     }
 
     @Override
-    protected final void deletion(int index) {
+    protected final void deleteResume(int index, String uuid) {
         list.remove(index);
     }
 
     @Override
-    protected final void updating(Resume resume, int index) {
+    protected final void updateResume(Resume resume, int index) {
         list.set(index, resume);
     }
 
@@ -49,7 +49,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public final Resume getting(int index) {
+    public final Resume getResume(int index, String uuid) {
         return list.get(index);
     }
 }
