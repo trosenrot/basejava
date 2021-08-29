@@ -3,9 +3,10 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.model.Resume;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
-    HashMap<String, Resume> map = new HashMap<>();
+    private final Map<String, Resume> map = new HashMap<>();
 
     @Override
     public Resume[] getAll() {
@@ -13,26 +14,23 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected int findIndex(String uuid) {
-        if (!map.containsKey(uuid)) {
-            return -1;
-        }
-        return 1;
+    protected Object findKey(String uuid) {
+        return map.containsKey(uuid) ? uuid : null;
     }
 
     @Override
-    protected void deleteResume(int index, String uuid) {
-        map.remove(uuid);
+    protected void deleteResume(Object key) {
+        map.remove((String) key);
     }
 
     @Override
-    protected void saveResume(Resume resume, int index) {
-        map.put(resume.getUuid(), resume);
+    protected void saveResume(Resume resume, Object key) {
+        map.put((String) key, resume);
     }
 
     @Override
-    protected void updateResume(Resume resume, int index) {
-        map.put(resume.getUuid(), resume);
+    protected void updateResume(Resume resume, Object key) {
+        map.put((String) key, resume);
     }
 
     @Override
@@ -46,7 +44,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getResume(int index, String uuid) {
-        return map.get(uuid);
+    protected Resume getResume(Object key) {
+        return map.get((String) key);
+    }
+
+    @Override
+    protected boolean isExist(Object key) {
+        return key != null;
     }
 }

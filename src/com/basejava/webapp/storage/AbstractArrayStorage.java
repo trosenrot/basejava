@@ -18,7 +18,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void saveResume(Resume resume, int index) {
+    protected final void saveResume(Resume resume, Object index) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("БД переполнена!", resume.getUuid());
         }
@@ -27,7 +27,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void deleteResume(int index, String uuid) {
+    protected void deleteResume(Object key) {
+        int index = (Integer) key;
         if (index < size - 1) {
             System.arraycopy(storage, index + 1, storage, index, (size - 1) - index);
         }
@@ -36,13 +37,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateResume(Resume resume, int index) {
-        storage[index] = resume;
+    protected void updateResume(Resume resume, Object key) {
+        storage[(Integer) key] = resume;
     }
 
     @Override
-    protected Resume getResume(int index, String uuid) {
-        return storage[index];
+    protected Resume getResume(Object key) {
+        return storage[(Integer) key];
     }
 
     /**
@@ -59,7 +60,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    protected abstract int findIndex(String uuid);
+    @Override
+    protected boolean isExist(Object key) {
+        return (Integer) key > 0;
+    }
 
-    protected abstract void saveToArray(Resume resume, int index);
+    protected abstract Object findKey(String uuid);
+
+    protected abstract void saveToArray(Resume resume, Object index);
 }

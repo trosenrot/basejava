@@ -14,7 +14,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected int findIndex(String uuid) {
+    protected Object findKey(String uuid) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -24,18 +24,18 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void saveResume(Resume resume, int index) {
+    protected final void saveResume(Resume resume, Object key) {
         list.add(resume);
     }
 
     @Override
-    protected final void deleteResume(int index, String uuid) {
-        list.remove(index);
+    protected final void deleteResume(Object key) {
+        list.remove((Integer) key);
     }
 
     @Override
-    protected final void updateResume(Resume resume, int index) {
-        list.set(index, resume);
+    protected final void updateResume(Resume resume, Object key) {
+        list.set((Integer) key, resume);
     }
 
     @Override
@@ -49,7 +49,12 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public final Resume getResume(int index, String uuid) {
-        return list.get(index);
+    public final Resume getResume(Object key) {
+        return list.get((Integer) key);
+    }
+
+    @Override
+    protected boolean isExist(Object key) {
+        return (Integer) key > 0;
     }
 }
