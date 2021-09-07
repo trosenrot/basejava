@@ -3,7 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 
-import java.util.Arrays;
+import java.util.*;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10_000;
@@ -22,7 +22,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("БД переполнена!", resume.getUuid());
         }
-        saveToArray(resume, (int) key);
+        saveToArray(resume, size);
         size++;
     }
 
@@ -51,8 +51,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
      */
 
     @Override
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+    protected List<Resume> getAll() {
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
     @Override
@@ -62,7 +62,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object key) {
-        return (int) key > 0;
+        return (int) key >= 0;
     }
 
     protected abstract Object findKey(String uuid);

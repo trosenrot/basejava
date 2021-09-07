@@ -9,8 +9,8 @@ public class ListStorage extends AbstractStorage {
     private final List<Resume> list = new ArrayList<>();
 
     @Override
-    public Resume[] getAll() {
-        return list.toArray(new Resume[list.size()]);
+    protected List<Resume> getAll() {
+        return new ArrayList<>(list);
     }
 
     @Override

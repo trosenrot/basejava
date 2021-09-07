@@ -7,17 +7,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapStorage extends AbstractStorage {
-    private final Map<String, Resume> map = new HashMap<>();
+public class MapResumeStorage extends AbstractStorage {
+    private final Map<String, com.basejava.webapp.model.Resume> map = new HashMap<>();
 
     @Override
-    protected List<Resume> getAll() {
+    protected List<com.basejava.webapp.model.Resume> getAll() {
         return new ArrayList<>(map.values());
     }
 
     @Override
     protected Object findKey(String uuid) {
-        return map.containsKey(uuid) ? uuid : null;
+        Resume[] values = map.values().toArray(new Resume[0]);
+        for (Resume r: values) {
+            if (uuid.equals(r.getUuid())) {
+                return uuid;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -26,12 +32,12 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected void saveResume(Resume resume, Object key) {
+    protected void saveResume(com.basejava.webapp.model.Resume resume, Object key) {
         map.put((String) key, resume);
     }
 
     @Override
-    protected void updateResume(Resume resume, Object key) {
+    protected void updateResume(com.basejava.webapp.model.Resume resume, Object key) {
         map.put((String) key, resume);
     }
 
@@ -46,7 +52,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume getResume(Object key) {
+    protected com.basejava.webapp.model.Resume getResume(Object key) {
         return map.get((String) key);
     }
 
