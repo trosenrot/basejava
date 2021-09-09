@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class AbstractStorageTest {
+public abstract class AbstractStorageTest {
 
     protected Storage storage;
 

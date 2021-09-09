@@ -20,13 +20,15 @@ public class SortedArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected Object findKey(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        return Arrays.binarySearch(storage, 0, size, searchKey);
+        Resume searchKey = new Resume (uuid, "searchKey");
+        return Arrays.binarySearch(storage, 0, size, searchKey, RESUME_COMPARATOR);
     }
 
     @Override
     protected void saveToArray(Resume resume, int key) {
-        key = -(key) - 1;
+        if (key < 0) {
+            key = -(key) - 1;
+        }
         System.arraycopy(storage, key, storage, key + 1, size - key);
         storage[key] = resume;
     }

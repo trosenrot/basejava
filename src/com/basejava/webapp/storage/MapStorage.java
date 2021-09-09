@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
-    private final Map<String, Resume> map = new HashMap<>();
+    private final Map<String, Resume> map = new HashMap<String, Resume>();
 
     @Override
     protected List<Resume> getAll() {
@@ -17,7 +17,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected Object findKey(String uuid) {
-        return map.containsKey(uuid) ? uuid : null;
+        return map.containsKey(uuid) ? uuid : null ;
     }
 
     @Override
@@ -27,6 +27,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void saveResume(Resume resume, Object key) {
+        key = resume.getUuid();
         map.put((String) key, resume);
     }
 

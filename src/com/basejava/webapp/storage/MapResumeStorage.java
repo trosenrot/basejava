@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 public class MapResumeStorage extends AbstractStorage {
-    private final Map<String, com.basejava.webapp.model.Resume> map = new HashMap<>();
+    private final Map<String, Resume> map = new HashMap<>();
 
     @Override
-    protected List<com.basejava.webapp.model.Resume> getAll() {
+    protected List<Resume> getAll() {
         return new ArrayList<>(map.values());
     }
 
@@ -32,12 +32,13 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected void saveResume(com.basejava.webapp.model.Resume resume, Object key) {
+    protected void saveResume(Resume resume, Object key) {
+        key = resume.getUuid();
         map.put((String) key, resume);
     }
 
     @Override
-    protected void updateResume(com.basejava.webapp.model.Resume resume, Object key) {
+    protected void updateResume(Resume resume, Object key) {
         map.put((String) key, resume);
     }
 
@@ -52,7 +53,7 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected com.basejava.webapp.model.Resume getResume(Object key) {
+    protected Resume getResume(Object key) {
         return map.get((String) key);
     }
 
