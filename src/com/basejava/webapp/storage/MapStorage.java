@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
-    private final Map<String, Resume> map = new HashMap<String, Resume>();
+    private final Map<String, Resume> map = new HashMap<>();
 
     @Override
-    protected List<Resume> getAll() {
+    protected List<Resume> getAsList() {
         return new ArrayList<>(map.values());
     }
 

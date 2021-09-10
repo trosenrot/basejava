@@ -46,7 +46,7 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public List<Resume> getAllSorted() {
-        List<Resume> list = getAll();
+        List<Resume> list = getAsList();
         Collections.sort(list);
         return list;
     }
@@ -63,5 +63,5 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract Resume getResume(Object key);
 
-    protected abstract List<Resume> getAll();
+    protected abstract List<Resume> getAsList();
 }

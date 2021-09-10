@@ -1,7 +1,7 @@
 package com.basejava.webapp;
 
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.storage.MapStorage;
+import com.basejava.webapp.storage.SortedArrayStorage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,8 +16,8 @@ public class MainArray {
  //   private final static ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 //    private final SortedArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
  //   private final static ListStorage ARRAY_STORAGE = new ListStorage();
- //   private final static SortedArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
-    private final static MapStorage ARRAY_STORAGE = new MapStorage();
+    private final static SortedArrayStorage ARRAY_STORAGE = new SortedArrayStorage();
+ //   private final static MapStorage ARRAY_STORAGE = new MapStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
