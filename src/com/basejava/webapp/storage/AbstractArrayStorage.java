@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 
 import java.util.*;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage <Integer> {
     protected static final int STORAGE_LIMIT = 10_000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -18,7 +18,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void saveResume(Resume resume, Object key) {
+    protected final void saveResume(Resume resume, Integer key) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("БД переполнена!", resume.getUuid());
         }
@@ -27,23 +27,22 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void deleteResume(Object key) {
-        int index = (int) key;
-        if (index < size - 1) {
-            System.arraycopy(storage, index + 1, storage, index, (size - 1) - index);
+    protected void deleteResume(Integer key) {
+        if (key < size - 1) {
+            System.arraycopy(storage, key + 1, storage, key, (size - 1) - key);
         }
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected void updateResume(Resume resume, Object key) {
-        storage[(int) key] = resume;
+    protected void updateResume(Resume resume, Integer key) {
+        storage[key] = resume;
     }
 
     @Override
-    protected Resume getResume(Object key) {
-        return storage[(int) key];
+    protected Resume getResume(Integer key) {
+        return storage[key];
     }
 
     /**
@@ -61,11 +60,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object key) {
-        return (int) key >= 0;
+    protected boolean isExist(Integer key) {
+        return key >= 0;
     }
 
-    protected abstract Object findKey(String uuid);
+    protected abstract Integer findKey(String uuid);
 
     protected abstract void saveToArray(Resume resume, int index);
 }

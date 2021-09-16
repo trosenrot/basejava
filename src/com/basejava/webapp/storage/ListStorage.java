@@ -5,7 +5,7 @@ import com.basejava.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     private final List<Resume> list = new ArrayList<>();
 
     @Override
@@ -14,7 +14,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object findKey(String uuid) {
+    protected Integer findKey(String uuid) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getUuid().equals(uuid)) {
                 return i;
@@ -24,18 +24,18 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void saveResume(Resume resume, Object key) {
+    protected final void saveResume(Resume resume, Integer key) {
         list.add(resume);
     }
 
     @Override
-    protected final void deleteResume(Object key) {
-        list.remove((int) key);
+    protected final void deleteResume(Integer key) {
+        list.remove(key);
     }
 
     @Override
-    protected final void updateResume(Resume resume, Object key) {
-        list.set((Integer) key, resume);
+    protected final void updateResume(Resume resume, Integer key) {
+        list.set(key, resume);
     }
 
     @Override
@@ -49,12 +49,12 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public final Resume getResume(Object key) {
-        return list.get((Integer) key);
+    public final Resume getResume(Integer key) {
+        return list.get(key);
     }
 
     @Override
-    protected boolean isExist(Object key) {
-        return (Integer) key >= 0;
+    protected boolean isExist(Integer key) {
+        return key >= 0;
     }
 }
