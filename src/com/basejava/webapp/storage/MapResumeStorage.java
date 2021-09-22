@@ -16,7 +16,9 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
     }
 
     @Override
-    protected Resume findKey(String uuid) {return map.get(uuid);}
+    protected Resume findKey(String uuid) {
+        return map.get(uuid);
+    }
 
     @Override
     protected void deleteResume(Resume key) {
@@ -25,7 +27,7 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
 
     @Override
     protected void saveResume(Resume resume, Resume key) {
-        map.put(key.getUuid(), resume);
+        map.put(resume.getUuid(), resume);
     }
 
     @Override

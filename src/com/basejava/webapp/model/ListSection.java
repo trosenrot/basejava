@@ -3,10 +3,11 @@ package com.basejava.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListSection extends AbstractSection{
+public class ListSection extends AbstractSection<String> {
 
     private final List<String> content = new ArrayList<>();
 
+    @Override
     public void setContent(String content) {
         this.content.add(content);
     }

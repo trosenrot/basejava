@@ -2,7 +2,7 @@ package com.basejava.webapp.model;
 
 import java.time.YearMonth;
 
-public class Organization {
+public class Experience {
 
     private final String name;
     private final YearMonth startDate;
@@ -10,7 +10,7 @@ public class Organization {
     private final String title;
     private final String description;
 
-    public Organization(String name, YearMonth startDate, YearMonth endDate, String title, String description) {
+    public Experience(String name, YearMonth startDate, YearMonth endDate, String title, String description) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -24,7 +24,7 @@ public class Organization {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Organization organization = (Organization) o;
+        Experience organization = (Experience) o;
 
         if (!name.equals(organization.name)) return false;
         if (!startDate.equals(organization.startDate)) return false;
@@ -41,13 +41,12 @@ public class Organization {
 
     @Override
     public String toString() {
-        if (startDate!=null && endDate!=null) {
+        if (startDate != null && endDate != null) {
             return "" + name + '\n' +
                     startDate + "-" + endDate + "\n" +
                     title + "\n" +
                     description;
-        }
-        else {
+        } else {
             return "" + name + '\n' +
                     startDate + "-" + " Сейчас\n" +
                     title + "\n" +

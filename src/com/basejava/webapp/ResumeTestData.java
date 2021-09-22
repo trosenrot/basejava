@@ -91,11 +91,11 @@ public class ResumeTestData {
         }
     }
 
-    private static void inputContact (ContactType type) throws IOException {
+    private static void inputContact(ContactType type) throws IOException {
         System.out.print("Введите " + type.getTitle() + ": ");
         String content;
         content = reader.readLine();
-        resume.setContact(type,content);
+        resume.setContact(type, content);
     }
 
     private static void saveData() throws IOException {
@@ -145,11 +145,9 @@ public class ResumeTestData {
     private static void inputSection(SectionType type) throws IOException {
         if (type == SectionType.PERSONAL || type == SectionType.OBJECTIVE) {
             inputTextSection(type);
-        }
-        else if (type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS) {
+        } else if (type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS) {
             inputListSection(type);
-        }
-        else {
+        } else {
             inputOrganizationSection(type);
         }
     }
@@ -157,7 +155,7 @@ public class ResumeTestData {
     private static void inputTextSection(SectionType type) throws IOException {
         System.out.print("Введите \"" + type.getTitle() + "\": ");
         String content = reader.readLine();
-        resume.setSections(type,new TextSection(content));
+        resume.setSections(type, new TextSection(content));
     }
 
     private static void inputListSection(SectionType type) throws IOException {
@@ -165,7 +163,7 @@ public class ResumeTestData {
         while (true) {
             System.out.print("Введите \"" + type.getTitle() + "\": ");
             list.setContent(reader.readLine());
-            if(!continueInput()){
+            if (!continueInput()) {
                 resume.setSections(type, list);
                 return;
             }
@@ -176,29 +174,29 @@ public class ResumeTestData {
         OrganizationSection list = new OrganizationSection();
         while (true) {
             System.out.print("Введите \"" + type.getTitle() + "\": ");
-            list.setOrganization(inputOrganization());
-            if(!continueInput()){
+            list.setContent(inputOrganization());
+            if (!continueInput()) {
                 resume.setSections(type, list);
                 return;
             }
         }
     }
 
-    private static Organization inputOrganization() throws IOException {
+    private static Experience inputOrganization() throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
         System.out.print("Введите название организации: ");
         String name = reader.readLine();
         System.out.print("Введите начало работы/учебы в организации в формате MM/YYYY: ");
-        YearMonth startDate = YearMonth.parse(reader.readLine(),formatter);
+        YearMonth startDate = YearMonth.parse(reader.readLine(), formatter);
         System.out.print("Введите окончание работы/учебы в организации в формате MM/YYYY или \"Сейчас\": ");
         String date = reader.readLine();
         YearMonth endDate;
-        endDate = (!date.equals("Сейчас")) ? YearMonth.parse(date,formatter) : null;
+        endDate = (!date.equals("Сейчас")) ? YearMonth.parse(date, formatter) : null;
         System.out.print("Введите заголовок: ");
         String title = reader.readLine();
         System.out.print("Введите описание: ");
         String description = reader.readLine();
-        return new Organization(name, startDate, endDate, title, description);
+        return new Experience(name, startDate, endDate, title, description);
     }
 
     private static boolean continueInput() throws IOException {
@@ -211,11 +209,9 @@ public class ResumeTestData {
             }
             if (params[0].equals("д") || params[0].equals("Д")) {
                 return true;
-            }
-            else if (params[0].equals("н") || params[0].equals("Н")) {
+            } else if (params[0].equals("н") || params[0].equals("Н")) {
                 return false;
-            }
-            else {
+            } else {
                 System.out.println("Неверная команда.");
             }
         }

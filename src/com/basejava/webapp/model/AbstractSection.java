@@ -1,4 +1,6 @@
 package com.basejava.webapp.model;
 
-public class AbstractSection implements Section {
+public abstract class AbstractSection<T> implements Section<T> {
+
+    public abstract void setContent(T content);
 }

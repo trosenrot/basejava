@@ -2,11 +2,9 @@ package com.basejava.webapp.model;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
-/**
- * com.basejava.webapp.Resume class
- */
 public class Resume implements Comparable<Resume> {
 
     // Unique identifier
@@ -34,27 +32,12 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-    public void setContact (ContactType type, String content) {
+    public void setContact(ContactType type, String content) {
         contacts.put(type, content);
     }
 
-    public void setSections (SectionType type, Section content) {
+    public void setSections(SectionType type, Section content) {
         sections.put(type, content);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Resume resume = (Resume) o;
-
-        return uuid.equals(resume.uuid);
-    }
-
-    @Override
-    public int hashCode() {
-        return uuid.hashCode();
     }
 
     @Override
@@ -66,9 +49,9 @@ public class Resume implements Comparable<Resume> {
                 ;
     }
 
-    public String outputContacts() {
+    private String outputContacts() {
         String text = "";
-        for(ContactType contactType : ContactType.values()){
+        for (ContactType contactType : ContactType.values()) {
             if (contacts.containsKey(contactType)) {
                 text = text + contactType.getTitle() + ": " + contacts.get(contactType) + "\n";
             }
@@ -76,9 +59,9 @@ public class Resume implements Comparable<Resume> {
         return text;
     }
 
-    public String outputSections() {
+    private String outputSections() {
         String text = "";
-        for(SectionType sectionType : SectionType.values()){
+        for (SectionType sectionType : SectionType.values()) {
             if (sections.containsKey(sectionType)) {
                 text = text + sectionType.getTitle() + ": \n" + sections.get(sectionType) + "\n";
             }
@@ -92,4 +75,16 @@ public class Resume implements Comparable<Resume> {
         return compare == 0 ? uuid.compareTo(o.uuid) : compare;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Resume resume = (Resume) o;
+        return Objects.equals(uuid, resume.uuid) && Objects.equals(fullName, resume.fullName) && Objects.equals(contacts, resume.contacts) && Objects.equals(sections, resume.sections);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uuid, fullName, contacts, sections);
+    }
 }

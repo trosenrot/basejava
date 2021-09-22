@@ -30,7 +30,7 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     protected final void deleteResume(Integer key) {
-        list.remove(key);
+        list.remove((int) key);
     }
 
     @Override
