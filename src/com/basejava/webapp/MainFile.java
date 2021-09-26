@@ -15,7 +15,7 @@ public class MainFile {
             throw new RuntimeException("Error", e);
         }
 
-        File dir = new File("./src/ru/javawebinar/basejava");
+        File dir = new File("./src/com/basejava");
         System.out.println(dir.isDirectory());
         String[] list = dir.list();
         if (list != null) {
@@ -28,6 +28,23 @@ public class MainFile {
             System.out.println(fis.read());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+
+        outputDirectoryStructure(dir);
+    }
+
+    public static void outputDirectoryStructure(File dir) {
+        File[] arrayFiles = dir.listFiles();
+        if (arrayFiles != null) {
+            return;
+        }
+        for (File file : arrayFiles) {
+            if (file.isFile()) {
+                System.out.println(file.getName());
+            } else {
+                System.out.println(file.getName() + ":");
+                outputDirectoryStructure(file);
+            }
         }
     }
 }

@@ -174,7 +174,19 @@ public class ResumeTestData {
         OrganizationSection list = new OrganizationSection();
         while (true) {
             System.out.print("Введите \"" + type.getTitle() + "\": ");
-            list.setContent(inputOrganization());
+            Organization organization = inputOrganization();
+            boolean existOrganization = false;
+            for (Organization content : list.getContent()) {
+                if (content.getName().equals(organization.getName())) {
+                    existOrganization = true;
+                    for (Experience exp : organization.getContent()) {
+                        content.addContent(exp);
+                    }
+                }
+            }
+            if (!existOrganization) {
+                list.setContent(inputOrganization());
+            }
             if (!continueInput()) {
                 resume.setSections(type, list);
                 return;
@@ -182,10 +194,18 @@ public class ResumeTestData {
         }
     }
 
-    private static Experience inputOrganization() throws IOException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
+    private static Organization inputOrganization() throws IOException {
         System.out.print("Введите название организации: ");
         String name = reader.readLine();
+        Organization organization = new Organization(name);
+        do {
+            organization.addContent(inputExperience());
+        } while (continueInput());
+        return organization;
+    }
+
+    private static Experience inputExperience() throws IOException {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yyyy");
         System.out.print("Введите начало работы/учебы в организации в формате MM/YYYY: ");
         YearMonth startDate = YearMonth.parse(reader.readLine(), formatter);
         System.out.print("Введите окончание работы/учебы в организации в формате MM/YYYY или \"Сейчас\": ");
@@ -196,7 +216,7 @@ public class ResumeTestData {
         String title = reader.readLine();
         System.out.print("Введите описание: ");
         String description = reader.readLine();
-        return new Experience(name, startDate, endDate, title, description);
+        return new Experience(startDate, endDate, title, description);
     }
 
     private static boolean continueInput() throws IOException {
@@ -215,6 +235,39 @@ public class ResumeTestData {
                 System.out.println("Неверная команда.");
             }
         }
+    }
+
+    public static Resume forTestMethod (String uuid, String name) {
+        Resume resume = new Resume(uuid, name);
+        resume.setContact(ContactType.PHONE, "+79998887766");
+        resume.setContact(ContactType.HOME_PHONE, "+74959995566");
+        resume.setContact(ContactType.E_MAIL, "contact@mail.ru");
+        resume.setContact(ContactType.LINKEDIN, "https://www.linkedin.com/in/contact");
+        resume.setContact(ContactType.GITHUB, "https://github.com/contact");
+        resume.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/56565656");
+        resume.setContact(ContactType.HOME_PAGE, "http://contact.ru/");
+
+        resume.setSections(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность."));
+        resume.setSections(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок"));
+        ListSection achievement = new ListSection();
+        achievement.setContent("С 2013 года: разработка проектов \"Разработка Web приложения\"");
+        achievement.setContent("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike");
+        resume.setSections(SectionType.ACHIEVEMENT, achievement);
+        ListSection qualification = new ListSection();
+        qualification.setContent("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
+        qualification.setContent("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
+        resume.setSections(SectionType.QUALIFICATIONS, qualification);
+        Organization organization = new Organization("Organization");
+        organization.addContent(new Experience(YearMonth.parse("2010-01"), YearMonth.parse("2010-05"), "title", "description"));
+        OrganizationSection organizationSection = new OrganizationSection();
+        organizationSection.setContent(organization);
+        resume.setSections(SectionType.EXPERIENCE, organizationSection);
+        organization = new Organization("Education");
+        organization.addContent(new Experience(YearMonth.parse("2001-01"), YearMonth.parse("2001-05"), "title", "description"));
+        organizationSection = new OrganizationSection();
+        organizationSection.setContent(organization);
+        resume.setSections(SectionType.EDUCATION, organizationSection);
+        return  resume;
     }
 }
 

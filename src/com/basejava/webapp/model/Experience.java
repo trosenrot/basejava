@@ -1,17 +1,16 @@
 package com.basejava.webapp.model;
 
 import java.time.YearMonth;
+import java.util.Objects;
 
 public class Experience {
 
-    private final String name;
     private final YearMonth startDate;
     private final YearMonth endDate;
     private final String title;
     private final String description;
 
-    public Experience(String name, YearMonth startDate, YearMonth endDate, String title, String description) {
-        this.name = name;
+    public Experience(YearMonth startDate, YearMonth endDate, String title, String description) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
@@ -23,31 +22,24 @@ public class Experience {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        Experience organization = (Experience) o;
-
-        if (!name.equals(organization.name)) return false;
-        if (!startDate.equals(organization.startDate)) return false;
-        if (!endDate.equals(organization.endDate)) return false;
-        if (!title.equals(organization.title)) return false;
-        return description.equals(organization.description);
-
+        Experience that = (Experience) o;
+        return Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(title, that.title) && Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return Objects.hash(startDate, endDate, title, description);
     }
 
     @Override
     public String toString() {
         if (startDate != null && endDate != null) {
-            return "" + name + '\n' +
+            return "" +
                     startDate + "-" + endDate + "\n" +
                     title + "\n" +
                     description;
         } else {
-            return "" + name + '\n' +
+            return "" +
                     startDate + "-" + " Сейчас\n" +
                     title + "\n" +
                     description;

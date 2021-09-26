@@ -3,18 +3,22 @@ package com.basejava.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrganizationSection extends AbstractSection<Experience> {
-    private List<Experience> content = new ArrayList<>();
+public class OrganizationSection extends AbstractSection<Organization> {
+    private List<Organization> content = new ArrayList<>();
 
-    public void setContent(Experience content) {
+    public void setContent(Organization content) {
         this.content.add(content);
+    }
+
+    public List<Organization> getContent() {
+        return new ArrayList<>(content);
     }
 
     @Override
     public String toString() {
         String text = "";
-        for (Experience org : content) {
-            text = text + org.toString() + "\n";
+        for (Organization org : content) {
+            text = text + org.toString();
         }
         return text;
     }
