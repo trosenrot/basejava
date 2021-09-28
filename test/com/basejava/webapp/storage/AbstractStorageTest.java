@@ -3,16 +3,17 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.ResumeTestData;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.model.*;
+import com.basejava.webapp.model.ContactType;
+import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.model.SectionType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
 
@@ -122,34 +123,19 @@ public abstract class AbstractStorageTest {
         Resume testResume = ResumeTestData.forTestMethod(UUID_1, "Name");
         assertEquals(UUID_1, testResume.getUuid());
         assertEquals("Name", testResume.getFullName());
-        assertEquals("+79998887766", testResume.getContants(ContactType.PHONE));
-        assertEquals("+74959995566", testResume.getContants(ContactType.HOME_PHONE));
-        assertEquals("contact@mail.ru", testResume.getContants(ContactType.E_MAIL));
-        assertEquals("https://www.linkedin.com/in/contact", testResume.getContants(ContactType.LINKEDIN));
-        assertEquals("https://github.com/contact", testResume.getContants(ContactType.GITHUB));
-        assertEquals("https://stackoverflow.com/users/56565656", testResume.getContants(ContactType.STACKOVERFLOW));
-        assertEquals("http://contact.ru/", testResume.getContants(ContactType.HOME_PAGE));
+        assertNotNull(testResume.getContants(ContactType.PHONE));
+        assertNotNull(testResume.getContants(ContactType.HOME_PHONE));
+        assertNotNull(testResume.getContants(ContactType.E_MAIL));
+        assertNotNull(testResume.getContants(ContactType.LINKEDIN));
+        assertNotNull(testResume.getContants(ContactType.GITHUB));
+        assertNotNull(testResume.getContants(ContactType.STACKOVERFLOW));
+        assertNotNull(testResume.getContants(ContactType.HOME_PAGE));
+        assertNotNull(testResume.getSection(SectionType.PERSONAL));
+        assertNotNull(testResume.getSection(SectionType.OBJECTIVE));
+        assertNotNull(testResume.getSection(SectionType.ACHIEVEMENT));
+        assertNotNull(testResume.getSection(SectionType.QUALIFICATIONS));
+        assertNotNull(testResume.getSection(SectionType.EXPERIENCE));
+        assertNotNull(testResume.getSection(SectionType.EDUCATION));
 
-        assertEquals("Аналитический склад ума, сильная логика, креативность, инициативность.", testResume.getSection(SectionType.PERSONAL).toString());
-        assertEquals("Ведущий стажировок", testResume.getSection(SectionType.OBJECTIVE).toString());
-        ListSection achievement = new ListSection();
-        achievement.setContent("С 2013 года: разработка проектов \"Разработка Web приложения\"");
-        achievement.setContent("Реализация двухфакторной аутентификации для онлайн платформы управления проектами Wrike");
-        assertEquals(achievement, testResume.getSection(SectionType.ACHIEVEMENT));
-        ListSection qualification = new ListSection();
-        qualification.setContent("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
-        qualification.setContent("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
-        assertEquals(qualification, testResume.getSection(SectionType.QUALIFICATIONS));
-
-        Organization organization = new Organization("Organization");
-        organization.addContent(new Experience(YearMonth.parse("2010-01"), YearMonth.parse("2010-05"), "title", "description"));
-        OrganizationSection organizationSection = new OrganizationSection();
-        organizationSection.setContent(organization);
-        assertEquals(organizationSection, testResume.getSection(SectionType.EXPERIENCE));
-        organization = new Organization("Education");
-        organization.addContent(new Experience(YearMonth.parse("2001-01"), YearMonth.parse("2001-05"), "title", "description"));
-        organizationSection = new OrganizationSection();
-        organizationSection.setContent(organization);
-        assertEquals(organizationSection, testResume.getSection(SectionType.EDUCATION));
     }
 }

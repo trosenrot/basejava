@@ -35,7 +35,7 @@ public class MainFile {
 
     public static void outputDirectoryStructure(File dir) {
         File[] arrayFiles = dir.listFiles();
-        if (arrayFiles != null) {
+        if (arrayFiles == null) {
             return;
         }
         for (File file : arrayFiles) {
