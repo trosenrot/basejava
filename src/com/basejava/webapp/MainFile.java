@@ -42,7 +42,6 @@ public class MainFile {
             if (file.isFile()) {
                 System.out.println(file.getName());
             } else {
-                System.out.println(file.getName() + ":");
                 outputDirectoryStructure(file);
             }
         }

@@ -3,9 +3,7 @@ package com.basejava.webapp.storage;
 import com.basejava.webapp.ResumeTestData;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
-import com.basejava.webapp.model.ContactType;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.model.SectionType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +11,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public abstract class AbstractStorageTest {
 
@@ -30,10 +28,10 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-        RESUME_1 = new Resume(UUID_1, "Name_1");
-        RESUME_2 = new Resume(UUID_2, "Name_2");
-        RESUME_3 = new Resume(UUID_3, "Name_3");
-        RESUME_4 = new Resume(UUID_4, "Name_4");
+        RESUME_1 = ResumeTestData.forTestMethod(UUID_1, "Name_1");
+        RESUME_2 = ResumeTestData.forTestMethod(UUID_2, "Name_2");
+        RESUME_3 = ResumeTestData.forTestMethod(UUID_3, "Name_3");
+        RESUME_4 = ResumeTestData.forTestMethod(UUID_4, "Name_4");
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -56,14 +54,14 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume updateResume = new Resume(UUID_1, "Name_1");
+        Resume updateResume = ResumeTestData.forTestMethod(UUID_1, "Name_1");
         storage.update(updateResume);
         assertEquals(updateResume, storage.get(UUID_1));
     }
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() {
-        storage.update(new Resume(UUID_4, "Name_4"));
+        storage.update(ResumeTestData.forTestMethod(UUID_4, "Name_4"));
     }
 
     @Test
@@ -118,24 +116,4 @@ public abstract class AbstractStorageTest {
         assertEquals(3, storage.size());
     }
 
-    @Test
-    public void testFullResume () {
-        Resume testResume = ResumeTestData.forTestMethod(UUID_1, "Name");
-        assertEquals(UUID_1, testResume.getUuid());
-        assertEquals("Name", testResume.getFullName());
-        assertNotNull(testResume.getContants(ContactType.PHONE));
-        assertNotNull(testResume.getContants(ContactType.HOME_PHONE));
-        assertNotNull(testResume.getContants(ContactType.E_MAIL));
-        assertNotNull(testResume.getContants(ContactType.LINKEDIN));
-        assertNotNull(testResume.getContants(ContactType.GITHUB));
-        assertNotNull(testResume.getContants(ContactType.STACKOVERFLOW));
-        assertNotNull(testResume.getContants(ContactType.HOME_PAGE));
-        assertNotNull(testResume.getSection(SectionType.PERSONAL));
-        assertNotNull(testResume.getSection(SectionType.OBJECTIVE));
-        assertNotNull(testResume.getSection(SectionType.ACHIEVEMENT));
-        assertNotNull(testResume.getSection(SectionType.QUALIFICATIONS));
-        assertNotNull(testResume.getSection(SectionType.EXPERIENCE));
-        assertNotNull(testResume.getSection(SectionType.EDUCATION));
-
-    }
 }
