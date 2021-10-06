@@ -30,19 +30,20 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        outputDirectoryStructure(dir);
+        outputDirectoryStructure(dir, "");
     }
 
-    public static void outputDirectoryStructure(File dir) {
+    public static void outputDirectoryStructure(File dir, String indent) {
         File[] arrayFiles = dir.listFiles();
         if (arrayFiles == null) {
             return;
         }
         for (File file : arrayFiles) {
             if (file.isFile()) {
-                System.out.println(file.getName());
+                System.out.println(indent + file.getName());
             } else {
-                outputDirectoryStructure(file);
+                System.out.println(indent + file.getName() + ":");
+                outputDirectoryStructure(file, indent + "  ");
             }
         }
     }
