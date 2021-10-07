@@ -4,7 +4,9 @@ import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.serialization.Serialization;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,12 +15,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
 
     private Serialization serialization;
 
-    protected AbstractPathStorage(String dir, Serialization serialization) {
+    protected PathStorage(String dir, Serialization serialization) {
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -27,26 +29,14 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         this.serialization = serialization;
     }
 
-    public void setSerialization(Serialization serialization) {
-        this.serialization = serialization;
-    }
-
     @Override
     public void clear() {
-        try {
-            Files.list(directory).forEach(this::deleteResume);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+        returnStream("Path delete error").forEach(this::deleteResume);
     }
 
     @Override
     public int size() {
-        String[] list = directory.toFile().list();
-        if (list == null) {
-            throw new StorageException("Directory read error", null);
-        }
-        return list.length;
+        return (int) returnStream("Path cannot be count").count();
     }
 
     @Override
@@ -97,14 +87,16 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected List<Resume> getAsList() {
+    protected List<Resume> getAll() {
+        return returnStream("Path get error").map(this::getResume).collect(Collectors.toList());
+    }
 
-        Stream<Path> stream = null;
+    private Stream<Path> returnStream(String message) {
+
         try {
-            stream = Files.list(directory);
+            return Files.list(directory);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException(message, directory.toString(), e);
         }
-        return stream.map(this::getResume).collect(Collectors.toList());
     }
 }

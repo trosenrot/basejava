@@ -57,7 +57,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     public List<Resume> getAllSorted() {
         LOG.info("getAllSorted");
-        List<Resume> list = getAsList();
+        List<Resume> list = getAll();
         Collections.sort(list);
         return list;
     }
@@ -74,5 +74,5 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     protected abstract Resume getResume(SK key);
 
-    protected abstract List<Resume> getAsList();
+    protected abstract List<Resume> getAll();
 }

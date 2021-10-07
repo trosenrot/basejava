@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private final File directory;
 
     private Serialization serialization;
 
-    protected AbstractFileStorage(File directory, Serialization serialization) {
+    protected FileStorage(File directory, Serialization serialization) {
         Objects.requireNonNull(directory, "directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -26,27 +26,16 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         this.serialization = serialization;
     }
 
-    public void setSerialization(Serialization serialization) {
-        this.serialization = serialization;
-    }
-
     @Override
     public void clear() {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                file.delete();
-            }
+        for (File file : getArrayFilesIsDirNotEmpty()) {
+            file.delete();
         }
     }
 
     @Override
     public int size() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            return 0;
-        }
-        return files.length;
+        return getArrayFilesIsDirNotEmpty().length;
     }
 
     @Override
@@ -59,7 +48,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             serialization.doWrite(r, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException("Write error", directory.toString(), e);
         }
     }
 
@@ -84,27 +73,32 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             return serialization.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException("Read error", directory.toString(), e);
         }
-        return null;
     }
 
 
     @Override
     protected void deleteResume(File file) {
-        file.delete();
+        if (!file.delete()) {
+            throw new StorageException("Couldn't delete file", directory.toString());
+        }
     }
 
     @Override
-    protected List<Resume> getAsList() {
-        File[] files = directory.listFiles();
-        if (files == null) {
-            return null;
-        }
+    protected List<Resume> getAll() {
         List<Resume> list = new ArrayList<>();
-        for (File file : files) {
+        for (File file : getArrayFilesIsDirNotEmpty()) {
             list.add(getResume(file));
         }
         return list;
+    }
+
+    private File[] getArrayFilesIsDirNotEmpty() {
+        File[] files = directory.listFiles();
+        if (files == null) {
+            throw new StorageException("List files is empty", directory.toString());
+        }
+        return files;
     }
 }

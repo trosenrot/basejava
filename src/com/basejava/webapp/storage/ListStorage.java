@@ -9,7 +9,7 @@ public class ListStorage extends AbstractStorage<Integer> {
     private final List<Resume> list = new ArrayList<>();
 
     @Override
-    protected List<Resume> getAsList() {
+    protected List<Resume> getAll() {
         return new ArrayList<>(list);
     }
 

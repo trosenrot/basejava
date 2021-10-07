@@ -50,7 +50,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage <Integer> {
      */
 
     @Override
-    protected List<Resume> getAsList() {
+    protected List<Resume> getAll() {
         return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
