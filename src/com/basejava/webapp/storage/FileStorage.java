@@ -2,7 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.serialization.Serialization;
+import com.basejava.webapp.storage.serialization.Serialization;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -28,14 +28,14 @@ public class FileStorage extends AbstractStorage<File> {
 
     @Override
     public void clear() {
-        for (File file : getArrayFilesIsDirNotEmpty()) {
-            file.delete();
+        for (File file : getFiles()) {
+            deleteResume(file);
         }
     }
 
     @Override
     public int size() {
-        return getArrayFilesIsDirNotEmpty().length;
+        return getFiles().length;
     }
 
     @Override
@@ -88,13 +88,13 @@ public class FileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> getAll() {
         List<Resume> list = new ArrayList<>();
-        for (File file : getArrayFilesIsDirNotEmpty()) {
+        for (File file : getFiles()) {
             list.add(getResume(file));
         }
         return list;
     }
 
-    private File[] getArrayFilesIsDirNotEmpty() {
+    private File[] getFiles() {
         File[] files = directory.listFiles();
         if (files == null) {
             throw new StorageException("List files is empty", directory.toString());

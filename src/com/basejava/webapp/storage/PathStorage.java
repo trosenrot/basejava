@@ -2,7 +2,7 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.StorageException;
 import com.basejava.webapp.model.Resume;
-import com.basejava.webapp.serialization.Serialization;
+import com.basejava.webapp.storage.serialization.Serialization;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -31,12 +31,12 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     public void clear() {
-        returnStream("Path delete error").forEach(this::deleteResume);
+        getPaths("Path delete error").forEach(this::deleteResume);
     }
 
     @Override
     public int size() {
-        return (int) returnStream("Path cannot be count").count();
+        return (int) getPaths("Path cannot be count").count();
     }
 
     @Override
@@ -88,10 +88,10 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getAll() {
-        return returnStream("Path get error").map(this::getResume).collect(Collectors.toList());
+        return getPaths("Path get error").map(this::getResume).collect(Collectors.toList());
     }
 
-    private Stream<Path> returnStream(String message) {
+    private Stream<Path> getPaths(String message) {
 
         try {
             return Files.list(directory);
