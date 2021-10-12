@@ -13,6 +13,9 @@ public class TextSection extends AbstractSection<String> {
         this.content = content;
     }
 
+    public TextSection() {
+    }
+
     @Override
     public String toString() {
         return content;

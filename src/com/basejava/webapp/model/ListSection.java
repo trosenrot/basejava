@@ -8,6 +8,9 @@ public class ListSection extends AbstractSection<String> {
 
     private final List<String> content = new ArrayList<>();
 
+    public ListSection() {
+    }
+
     @Override
     public void setContent(String content) {
         this.content.add(content);

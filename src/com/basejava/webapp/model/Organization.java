@@ -1,19 +1,28 @@
 package com.basejava.webapp.model;
 
+import com.basejava.webapp.util.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
+    public Organization() {
+    }
+
     private static final long serialVersionUID = 1L;
 
     private final List<Experience> content = new ArrayList<>();
-    private final Link homePage;
+    private Link homePage;
 
     public Organization(String name, String url) {
-        this.homePage = new Link (name, url);
+        this.homePage = new Link(name, url);
     }
 
     public String getName() {
@@ -55,13 +64,19 @@ public class Organization implements Serializable {
         return text;
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Experience implements Serializable {
+        public Experience() {
+        }
+
         private static final long serialVersionUID = 1L;
 
-        private final YearMonth startDate;
-        private final YearMonth endDate;
-        private final String title;
-        private final String description;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private YearMonth startDate;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private YearMonth endDate;
+        private String title;
+        private String description;
 
         public Experience(YearMonth startDate, YearMonth endDate, String title, String description) {
             this.startDate = startDate;
