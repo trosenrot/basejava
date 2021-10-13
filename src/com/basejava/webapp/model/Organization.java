@@ -37,6 +37,16 @@ public class Organization implements Serializable {
         return new ArrayList<>(content);
     }
 
+    public List<String> getContents() {
+        List<String> array = new ArrayList<>();
+        array.add(homePage.getName());
+        array.add(homePage.getUrl());
+        for (Experience cont : content) {
+            array.addAll(cont.getContacts());
+        }
+        return array;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,6 +95,14 @@ public class Organization implements Serializable {
             this.description = description;
         }
 
+        public List<String> getContacts() {
+            List<String> array = new ArrayList<>();
+            array.add(startDate.toString());
+            array.add(endDate.toString());
+            array.add(title);
+            array.add(description);
+            return array;
+        }
 
         @Override
         public boolean equals(Object o) {

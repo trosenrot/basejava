@@ -11,9 +11,22 @@ public class ListSection extends AbstractSection<String> {
     public ListSection() {
     }
 
+    public ListSection(List<String> list) {
+        content.addAll(list);
+    }
+
+    public int size() {
+        return content.size();
+    }
+
     @Override
     public void setContent(String content) {
         this.content.add(content);
+    }
+
+    @Override
+    public List<String> getContents() {
+        return content;
     }
 
     @Override
