@@ -15,25 +15,14 @@ public class OrganizationSection extends AbstractSection<Organization> {
 
     private List<Organization> content = new ArrayList<>();
 
-    @Override
     public void setContent(Organization content) {
         this.content.add(content);
-    }
-
-    @Override
-    public List<String> getContents() {
-        List<String> array = new ArrayList<>();
-        for (Organization org : content) {
-            array.addAll(org.getContents());
-        }
-        return array;
     }
 
     public List<Organization> getContent() {
         return new ArrayList<>(content);
     }
 
-    @Override
     public int size() {
         return content.size();
     }

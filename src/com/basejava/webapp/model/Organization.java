@@ -29,6 +29,10 @@ public class Organization implements Serializable {
         return homePage.getName();
     }
 
+    public Link getFullName() {
+        return homePage;
+    }
+
     public void addContent(Experience experience) {
         content.add(experience);
     }
@@ -37,14 +41,8 @@ public class Organization implements Serializable {
         return new ArrayList<>(content);
     }
 
-    public List<String> getContents() {
-        List<String> array = new ArrayList<>();
-        array.add(homePage.getName());
-        array.add(homePage.getUrl());
-        for (Experience cont : content) {
-            array.addAll(cont.getContacts());
-        }
-        return array;
+    public int size() {
+        return content.size();
     }
 
     @Override
@@ -95,7 +93,7 @@ public class Organization implements Serializable {
             this.description = description;
         }
 
-        public List<String> getContacts() {
+        public List<String> getContent() {
             List<String> array = new ArrayList<>();
             array.add(startDate.toString());
             array.add(endDate.toString());

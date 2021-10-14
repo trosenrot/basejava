@@ -19,13 +19,11 @@ public class ListSection extends AbstractSection<String> {
         return content.size();
     }
 
-    @Override
     public void setContent(String content) {
         this.content.add(content);
     }
 
-    @Override
-    public List<String> getContents() {
+    public List<String> getContent() {
         return content;
     }
 

@@ -25,11 +25,7 @@ public class DataStreamSerializer implements Serialization {
             dos.writeInt(sections.size());
             for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
                 dos.writeUTF(entry.getKey().name());
-                List<String> arraySection = entry.getValue().getContents();
-                dos.writeInt(arraySection.size());
-                for (String array : arraySection) {
-                    dos.writeUTF(array);
-                }
+                writeValue(dos, entry.getKey(), entry.getValue());
             }
         }
     }
@@ -49,14 +45,48 @@ public class DataStreamSerializer implements Serialization {
         }
     }
 
+    private void writeValue(DataOutputStream dos, SectionType sectionType, AbstractSection value) throws IOException {
+        switch (sectionType) {
+            case PERSONAL:
+            case OBJECTIVE:
+                dos.writeUTF(((TextSection) value).getContent());
+                break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                dos.writeInt(((ListSection) value).size());
+                for (String content : ((ListSection) value).getContent()) {
+                    dos.writeUTF(content);
+                }
+                break;
+            case EDUCATION:
+            case EXPERIENCE:
+                dos.writeInt(((OrganizationSection) value).size());
+                for (Organization list : ((OrganizationSection) value).getContent()) {
+                    dos.writeUTF(list.getFullName().getName());
+                    dos.writeUTF(list.getFullName().getUrl());
+                    dos.writeInt(list.size());
+                    for (Organization.Experience experience : list.getContent()) {
+                        for (String content : experience.getContent()) {
+                            dos.writeUTF(content);
+                        }
+                    }
+                }
+                break;
+            default:
+                throw new StorageException("Error section type", null);
+        }
+
+    }
+
     private AbstractSection readAbstractSection(DataInputStream dis, SectionType sectionType) throws IOException {
-        int sizeSection = dis.readInt();
+        int sizeSection;
         switch (sectionType) {
             case PERSONAL:
             case OBJECTIVE:
                 return new TextSection(dis.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
+                sizeSection = dis.readInt();
                 List<String> array = new ArrayList<>();
                 for (int j = 0; j < sizeSection; j++) {
                     array.add(dis.readUTF());
@@ -64,8 +94,10 @@ public class DataStreamSerializer implements Serialization {
                 return new ListSection(array);
             case EDUCATION:
             case EXPERIENCE:
+                sizeSection = dis.readInt();
                 Organization organization = new Organization(dis.readUTF(), dis.readUTF());
-                for (int k = 0; k < (sizeSection - 2) / 4; k++) {
+                int sizeOrganization = dis.readInt();
+                for (int k = 0; k < sizeOrganization; k++) {
                     organization.addContent(new Organization.Experience(YearMonth.parse(dis.readUTF()), YearMonth.parse(dis.readUTF()), dis.readUTF(), dis.readUTF()));
                 }
                 return new OrganizationSection(organization);
