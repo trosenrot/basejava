@@ -1,6 +1,6 @@
 package com.basejava.webapp.model;
 
-public class TextSection extends AbstractSection<String> {
+public class TextSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
     private String content;

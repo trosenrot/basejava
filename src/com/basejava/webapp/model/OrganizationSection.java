@@ -3,7 +3,7 @@ package com.basejava.webapp.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrganizationSection extends AbstractSection<Organization> {
+public class OrganizationSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
 
     public OrganizationSection() {

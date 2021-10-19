@@ -6,6 +6,7 @@ import com.basejava.webapp.model.*;
 import java.io.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,17 +17,15 @@ public class DataStreamSerializer implements Serialization {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
             Map<ContactType, String> contacts = r.getContacts();
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
+            writeWithException(contacts.entrySet(), dos, entry -> {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
-            }
+            });
             Map<SectionType, AbstractSection> sections = r.getSections();
-            dos.writeInt(sections.size());
-            for (Map.Entry<SectionType, AbstractSection> entry : sections.entrySet()) {
+            writeWithException(sections.entrySet(), dos, entry -> {
                 dos.writeUTF(entry.getKey().name());
                 writeValue(dos, entry.getKey(), entry.getValue());
-            }
+            });
         }
     }
 
@@ -53,29 +52,31 @@ public class DataStreamSerializer implements Serialization {
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                dos.writeInt(((ListSection) value).size());
-                for (String content : ((ListSection) value).getContent()) {
-                    dos.writeUTF(content);
-                }
+                writeWithException(((ListSection) value).getContent(), dos, dos::writeUTF);
                 break;
             case EDUCATION:
             case EXPERIENCE:
-                dos.writeInt(((OrganizationSection) value).size());
-                for (Organization list : ((OrganizationSection) value).getContent()) {
-                    dos.writeUTF(list.getFullName().getName());
-                    dos.writeUTF(list.getFullName().getUrl());
+                writeWithException(((OrganizationSection) value).getContent(), dos, list -> {
+                    Link name = list.getFullName();
+                    dos.writeUTF(name.getName());
+                    dos.writeUTF(name.getUrl());
                     dos.writeInt(list.size());
-                    for (Organization.Experience experience : list.getContent()) {
-                        for (String content : experience.getContent()) {
-                            dos.writeUTF(content);
-                        }
-                    }
-                }
+                    writeWithException(list.getContent(), dos, experience -> {
+                        writeDate(dos, experience.getStartDate());
+                        writeDate(dos, experience.getEndDate());
+                        dos.writeUTF(experience.getTitle());
+                        dos.writeUTF(experience.getDescription());
+                    });
+                });
                 break;
             default:
                 throw new StorageException("Error section type", null);
         }
 
+    }
+
+    private void writeDate(DataOutputStream dos, YearMonth date) throws IOException {
+        dos.writeUTF(String.valueOf(date));
     }
 
     private AbstractSection readAbstractSection(DataInputStream dis, SectionType sectionType) throws IOException {
@@ -98,6 +99,7 @@ public class DataStreamSerializer implements Serialization {
                 Organization organization = new Organization(dis.readUTF(), dis.readUTF());
                 int sizeOrganization = dis.readInt();
                 for (int k = 0; k < sizeOrganization; k++) {
+                    sizeSection = dis.readInt();
                     organization.addContent(new Organization.Experience(YearMonth.parse(dis.readUTF()), YearMonth.parse(dis.readUTF()), dis.readUTF(), dis.readUTF()));
                 }
                 return new OrganizationSection(organization);
@@ -111,6 +113,17 @@ public class DataStreamSerializer implements Serialization {
         for (int i = 0; i < size; i++) {
             reader.readValue();
         }
+    }
+
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, WriterValue<T> writer) throws IOException {
+        dos.writeInt(collection.size());
+        for (T content : collection) {
+            writer.writeValue(content);
+        }
+    }
+
+    private interface WriterValue<T> {
+        void writeValue(T content) throws IOException;
     }
 
     private interface ReaderValue {

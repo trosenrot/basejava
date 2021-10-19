@@ -102,6 +102,22 @@ public class Organization implements Serializable {
             return array;
         }
 
+        public YearMonth getStartDate() {
+            return startDate;
+        }
+
+        public YearMonth getEndDate() {
+            return endDate;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
