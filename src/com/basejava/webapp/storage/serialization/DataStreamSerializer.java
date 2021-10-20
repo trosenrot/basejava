@@ -56,16 +56,23 @@ public class DataStreamSerializer implements Serialization {
                 break;
             case EDUCATION:
             case EXPERIENCE:
-                writeWithException(((OrganizationSection) value).getContent(), dos, list -> {
-                    Link name = list.getFullName();
+                writeWithException(((OrganizationSection) value).getContent(), dos, orgs -> {
+                    Link name = orgs.getFullName();
                     dos.writeUTF(name.getName());
-                    dos.writeUTF(name.getUrl());
-                    dos.writeInt(list.size());
-                    writeWithException(list.getContent(), dos, experience -> {
+                    if (name.getUrl() != null) {
+                        dos.writeUTF(name.getUrl());
+                    } else {
+                        dos.writeUTF("");
+                    }
+                    writeWithException(orgs.getContent(), dos, experience -> {
                         writeDate(dos, experience.getStartDate());
                         writeDate(dos, experience.getEndDate());
                         dos.writeUTF(experience.getTitle());
-                        dos.writeUTF(experience.getDescription());
+                        if (experience.getDescription() == null) {
+                            dos.writeUTF("");
+                        } else {
+                            dos.writeUTF(experience.getDescription());
+                        }
                     });
                 });
                 break;
@@ -96,11 +103,22 @@ public class DataStreamSerializer implements Serialization {
             case EDUCATION:
             case EXPERIENCE:
                 sizeSection = dis.readInt();
-                Organization organization = new Organization(dis.readUTF(), dis.readUTF());
+                String name = dis.readUTF();
+                String url = dis.readUTF();
+                if (url.equals("")) {
+                    url = null;
+                }
+                Organization organization = new Organization(name, url);
                 int sizeOrganization = dis.readInt();
                 for (int k = 0; k < sizeOrganization; k++) {
-                    sizeSection = dis.readInt();
-                    organization.addContent(new Organization.Experience(YearMonth.parse(dis.readUTF()), YearMonth.parse(dis.readUTF()), dis.readUTF(), dis.readUTF()));
+                    YearMonth startDate = YearMonth.parse(dis.readUTF());
+                    YearMonth endDate = YearMonth.parse(dis.readUTF());
+                    String title = dis.readUTF();
+                    String description = dis.readUTF();
+                    if (description.equals("")) {
+                        description = null;
+                    }
+                    organization.addContent(new Organization.Experience(startDate, endDate, title, description));
                 }
                 return new OrganizationSection(organization);
             default:

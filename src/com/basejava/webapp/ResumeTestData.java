@@ -269,6 +269,11 @@ public class ResumeTestData {
         organizationSection = new OrganizationSection();
         organizationSection.setContent(organization);
         resume.setSections(SectionType.EDUCATION, organizationSection);
+        organization = new Organization("Education2", null);
+        organization.addContent(new Organization.Experience(YearMonth.parse("2011-01"), YearMonth.parse("2011-05"), "title2", null));
+        organizationSection = new OrganizationSection();
+        organizationSection.setContent(organization);
+        resume.setSections(SectionType.EDUCATION, organizationSection);
         return resume;
     }
 }
