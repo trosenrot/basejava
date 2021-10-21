@@ -59,20 +59,12 @@ public class DataStreamSerializer implements Serialization {
                 writeWithException(((OrganizationSection) value).getContent(), dos, orgs -> {
                     Link name = orgs.getFullName();
                     dos.writeUTF(name.getName());
-                    if (name.getUrl() != null) {
-                        dos.writeUTF(name.getUrl());
-                    } else {
-                        dos.writeUTF("");
-                    }
+                    dos.writeUTF(name.getUrl() != null ? name.getUrl() : "");
                     writeWithException(orgs.getContent(), dos, experience -> {
                         writeDate(dos, experience.getStartDate());
                         writeDate(dos, experience.getEndDate());
                         dos.writeUTF(experience.getTitle());
-                        if (experience.getDescription() == null) {
-                            dos.writeUTF("");
-                        } else {
-                            dos.writeUTF(experience.getDescription());
-                        }
+                        dos.writeUTF(experience.getDescription() == null ? "" : experience.getDescription());
                     });
                 });
                 break;
@@ -87,22 +79,21 @@ public class DataStreamSerializer implements Serialization {
     }
 
     private AbstractSection readAbstractSection(DataInputStream dis, SectionType sectionType) throws IOException {
-        int sizeSection;
         switch (sectionType) {
             case PERSONAL:
             case OBJECTIVE:
                 return new TextSection(dis.readUTF());
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                sizeSection = dis.readInt();
+                int sizeList = dis.readInt();
                 List<String> array = new ArrayList<>();
-                for (int j = 0; j < sizeSection; j++) {
+                for (int j = 0; j < sizeList; j++) {
                     array.add(dis.readUTF());
                 }
                 return new ListSection(array);
             case EDUCATION:
             case EXPERIENCE:
-                sizeSection = dis.readInt();
+                int sizeOrgs = dis.readInt();
                 String name = dis.readUTF();
                 String url = dis.readUTF();
                 if (url.equals("")) {
