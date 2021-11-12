@@ -59,11 +59,6 @@ public class MainConcurrency {
 
         });
         System.out.println(mainConcurrency.counter);
-        final Object object1 = new Object();
-        final Object object2 = new Object();
-        deadLock(object1, object2);
-        deadLock(object2, object1);
-        System.out.println("потоки вышли из метода");
     }
 
     private synchronized void inc() {
@@ -76,19 +71,5 @@ public class MainConcurrency {
 //        }
     }
 
-    private static void deadLock(Object object1, Object object2) {
-        new Thread(() -> {
-            System.out.println(Thread.currentThread().getName() + ", " + Thread.currentThread().getState());
-            synchronized (object1) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    System.out.println("поток прерван");
-                }
-                synchronized (object2) {
-                    System.out.println("внутри");
-                }
-            }
-        }).start();
-    }
+
 }
