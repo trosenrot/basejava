@@ -11,26 +11,25 @@ public class MainDeadLock {
 
     private static void deadLock(Object object1, Object object2) {
         new Thread(() -> {
-            System.out.println(Thread.currentThread().getName() + " пытается захватить " + getNameObject(object1));
+            String nameObject1 = getNameObject(object1);
+            String nameObject2 = getNameObject(object2);
+            System.out.println(Thread.currentThread().getName() + " пытается захватить " + nameObject1);
             synchronized (object1) {
-                System.out.println(Thread.currentThread().getName() + " захватил " + getNameObject(object1));
+                System.out.println(Thread.currentThread().getName() + " захватил " + nameObject1);
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
                     System.out.println(Thread.currentThread().getName() + " прерван");
                 }
-                System.out.println(Thread.currentThread().getName() + " пытается захватить " + getNameObject(object2));
+                System.out.println(Thread.currentThread().getName() + " пытается захватить " + nameObject2);
                 synchronized (object2) {
-                    System.out.println(Thread.currentThread().getName() + " захватил " + getNameObject(object2));
+                    System.out.println(Thread.currentThread().getName() + " захватил " + nameObject2);
                 }
             }
         }).start();
     }
 
-    private static String getNameObject (Object object) {
-        if (object.equals(object1)){
-            return "object1";
-        }
-        return "object2";
+    private static String getNameObject(Object object) {
+        return object.equals(object1) ? "object1" : "object2";
     }
 }
