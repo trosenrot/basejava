@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class MainHW12 {
+public class MainStream {
     public static void main(String[] args) {
         int[] values = {1, 2, 2, 3, 3, 4, 5, 1, 6};
         System.out.println(minValue(values));
@@ -15,15 +15,7 @@ public class MainHW12 {
     }
 
     public static int minValue(int[] values) {
-
-        int[] resultNumbers = IntStream.of(values).sorted().distinct().toArray();
-        int result = 0;
-        int length = resultNumbers.length;
-        for (int i = 0; i < resultNumbers.length; i++) {
-            result = result + (int) (resultNumbers[i] * Math.pow(10.0, length - 1));
-            length--;
-        }
-        return result;
+        return IntStream.of(values).distinct().sorted().reduce(0, (x, y) -> 10 * x + y);
     }
 
     public static List<Integer> oddOrEven(List<Integer> integers) {
