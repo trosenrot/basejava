@@ -69,7 +69,7 @@ public class DataStreamSerializer implements Serialization {
                 });
                 break;
             default:
-                throw new StorageException("Error section type", null);
+                throw new StorageException("Error section type");
         }
 
     }
@@ -113,7 +113,7 @@ public class DataStreamSerializer implements Serialization {
                 }
                 return new OrganizationSection(organization);
             default:
-                throw new StorageException("Error section type", null);
+                throw new StorageException("Error section type");
         }
     }
 
