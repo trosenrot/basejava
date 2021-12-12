@@ -1,6 +1,5 @@
 package com.basejava.webapp.storage;
 
-import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
 import com.basejava.webapp.sql.SqlHelper;
@@ -38,10 +37,11 @@ public class SqlStorage implements Storage {
     @Override
     public void update(Resume r) {
         sqlHelper.execute("UPDATE resume SET full_name = ? WHERE uuid = ?", ps -> {
+            String uuid = r.getUuid();
             ps.setString(1, r.getFullName());
-            ps.setString(2, r.getUuid());
+            ps.setString(2, uuid);
             if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(r.getUuid());
+                throw new NotExistStorageException(uuid);
             }
             return null;
         });
@@ -49,17 +49,12 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume r) {
-        try {
-            get(r.getUuid());
-            throw new ExistStorageException(r.getUuid());
-        } catch (NotExistStorageException e) {
-            sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
-                ps.setString(1, r.getUuid());
-                ps.setString(2, r.getFullName());
-                ps.execute();
-                return null;
-            });
-        }
+        sqlHelper.execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
+            ps.setString(1, r.getUuid());
+            ps.setString(2, r.getFullName());
+            ps.execute();
+            return null;
+        });
     }
 
     @Override
@@ -75,13 +70,12 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute("SELECT * FROM resume ORDER BY uuid", ps -> {
+        return sqlHelper.execute("SELECT * FROM resume ORDER BY  full_name, uuid", ps -> {
             ResultSet resultSet = ps.executeQuery();
             List<Resume> resumes = new ArrayList<>();
             while (resultSet.next()) {
-                resumes.add(new Resume(resultSet.getString("uuid").trim(), resultSet.getString("full_name").trim()));
+                resumes.add(new Resume(resultSet.getString("uuid"), resultSet.getString("full_name")));
             }
-
             return resumes;
         });
     }
