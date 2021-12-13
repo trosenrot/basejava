@@ -25,5 +25,8 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void saveToArray(Resume resume, int key) {storage[key] = resume;}
+    protected void saveToArray(Resume resume, int key) {
+        storage[size] = resume;
+        Arrays.sort(storage, 0, size + 1, RESUME_COMPARATOR);
+    }
 }
