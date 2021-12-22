@@ -249,7 +249,7 @@ public class ResumeTestData {
         resume.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/56565656");
         resume.setContact(ContactType.HOME_PAGE, "http://contact.ru/");
 
-        resume.setSections(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность."));
+        /*resume.setSections(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность."));
         resume.setSections(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок"));
         ListSection achievement = new ListSection();
         achievement.setContent("С 2013 года: разработка проектов \"Разработка Web приложения\"");
@@ -273,7 +273,7 @@ public class ResumeTestData {
         organization.addContent(new Organization.Experience(YearMonth.parse("2011-01"), YearMonth.parse("2011-05"), "title2", null));
         organizationSection = new OrganizationSection();
         organizationSection.setContent(organization);
-        resume.setSections(SectionType.EDUCATION, organizationSection);
+        resume.setSections(SectionType.EDUCATION, organizationSection);*/
         return resume;
     }
 }
