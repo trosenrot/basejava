@@ -99,7 +99,6 @@ public class SqlStorage implements Storage {
                         if (map.get(uuid) == null) {
                             r = new Resume(uuid, rs.getString("full_name"));
                         }
-                        String value = rs.getString("value");
                         addContact(rs, r);
                         map.put(uuid, r);
                     }
