@@ -249,7 +249,7 @@ public class ResumeTestData {
         resume.setContact(ContactType.STACKOVERFLOW, "https://stackoverflow.com/users/56565656");
         resume.setContact(ContactType.HOME_PAGE, "http://contact.ru/");
 
-        /*resume.setSections(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность."));
+        resume.setSections(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, инициативность."));
         resume.setSections(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок"));
         ListSection achievement = new ListSection();
         achievement.setContent("С 2013 года: разработка проектов \"Разработка Web приложения\"");
@@ -259,7 +259,7 @@ public class ResumeTestData {
         qualification.setContent("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
         qualification.setContent("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
         resume.setSections(SectionType.QUALIFICATIONS, qualification);
-        Organization organization = new Organization("Organization", "url");
+        /*Organization organization = new Organization("Organization", "url");
         organization.addContent(new Organization.Experience(YearMonth.parse("2010-01"), YearMonth.parse("2010-05"), "title", "description"));
         OrganizationSection organizationSection = new OrganizationSection();
         organizationSection.setContent(organization);
