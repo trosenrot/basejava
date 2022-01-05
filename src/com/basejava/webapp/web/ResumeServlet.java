@@ -28,10 +28,10 @@ public class ResumeServlet extends HttpServlet {
         response.getWriter().write(name == null ? "Hello Resumes!" : "Hello " + name + '!');
         response.getWriter().write(
                 "<table border=\"1\">" +
-                    "<tr>" +
+                        "<tr>" +
                         "<th>UUID</th>" +
                         "<th>fullName</th>" +
-                    "</tr>");
+                        "</tr>");
         for (Resume resume : storage.getAllSorted()) {
             response.getWriter().write("<tr>" +
                     "<td>" + resume.getUuid() + "</td>" +
