@@ -12,14 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ResumeServlet extends HttpServlet {
+    Storage storage;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
+        storage = Config.get().getStorage();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Storage storage = Config.get().getStorage();
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 //        response.setHeader("Content-Type", "text/html; charset=UTF-8");

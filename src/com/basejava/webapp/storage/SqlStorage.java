@@ -12,7 +12,12 @@ public class SqlStorage implements Storage {
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) throws ClassNotFoundException {
         sqlHelper = new SqlHelper(() -> DriverManager.getConnection(dbUrl, dbUser, dbPassword));
-        Class.forName("org.postgresql.Driver");
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Driver postgresql is not found!", e);
+        }
+
     }
 
     @Override
@@ -99,8 +104,8 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        Map<String, Resume> map = new LinkedHashMap<>();
         return sqlHelper.transactionalExecute(conn -> {
+            Map<String, Resume> map = new LinkedHashMap<>();
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume ORDER BY  full_name, uuid")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
@@ -167,14 +172,15 @@ public class SqlStorage implements Storage {
                 SectionType type = SectionType.valueOf(e.getKey().name());
                 ps.setString(2, type.name());
                 AbstractSection section = e.getValue();
-                if (type == SectionType.PERSONAL || type == SectionType.OBJECTIVE) {
-                    ps.setString(3, ((TextSection) section).getContent());
-                } else if (type == SectionType.ACHIEVEMENT || type == SectionType.QUALIFICATIONS) {
-                    String content = "";
-                    for (String s : ((ListSection) section).getContent()) {
-                        content = content + s + "\n";
-                    }
-                    ps.setString(3, content);
+                switch (type) {
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        ps.setString(3, ((TextSection) section).getContent());
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        ps.setString(3, String.join("\n", ((ListSection) section).getContent()));
+                        break;
                 }
                 ps.addBatch();
             }
@@ -194,10 +200,15 @@ public class SqlStorage implements Storage {
         if (value != null) {
             String type = rs.getString("type");
             SectionType sectionType = type.equals("Личные качества") ? SectionType.PERSONAL : SectionType.valueOf(type);
-            if (sectionType == SectionType.PERSONAL || sectionType == SectionType.OBJECTIVE) {
-                r.addSection(sectionType, new TextSection(value));
-            } else if (sectionType == SectionType.ACHIEVEMENT || sectionType == SectionType.QUALIFICATIONS) {
-                r.addSection(sectionType, new ListSection(Arrays.asList(value.split("\n"))));
+            switch (sectionType) {
+                case PERSONAL:
+                case OBJECTIVE:
+                    r.addSection(sectionType, new TextSection(value));
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+                    r.addSection(sectionType, new ListSection(Arrays.asList(value.split("\n"))));
+                    break;
             }
         }
     }
