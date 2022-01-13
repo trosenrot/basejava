@@ -31,7 +31,7 @@ public class ListSection extends AbstractSection {
     public String toString() {
         String text = "";
         for (String cnt : content) {
-            text = text + "- " + cnt + "\n";
+            text = text + cnt;
         }
         return text;
     }

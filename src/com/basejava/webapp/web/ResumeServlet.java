@@ -1,8 +1,7 @@
 package com.basejava.webapp.web;
 
 import com.basejava.webapp.Config;
-import com.basejava.webapp.model.ContactType;
-import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.model.*;
 import com.basejava.webapp.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -11,9 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class ResumeServlet extends HttpServlet {
-    Storage storage;
+    private Storage storage;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -31,6 +32,15 @@ public class ResumeServlet extends HttpServlet {
         }
         Resume r;
         switch (action) {
+            case "add":
+                r = new Resume();
+                r.addSection(SectionType.PERSONAL, new TextSection(""));
+                r.addSection(SectionType.OBJECTIVE, new TextSection(""));
+                r.addSection(SectionType.ACHIEVEMENT, new ListSection());
+                r.addSection(SectionType.QUALIFICATIONS, new ListSection());
+                r.addSection(SectionType.EDUCATION, new OrganizationSection());
+                r.addSection(SectionType.EXPERIENCE, new OrganizationSection());
+                break;
             case "delete":
                 storage.delete(uuid);
                 response.sendRedirect("resume");
@@ -53,9 +63,26 @@ public class ResumeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
-        String fullName = request.getParameter("fullName");
-        Resume r = storage.get(uuid);
-        r.setFullName(fullName);
+        boolean add = (uuid.equals(""));
+        String fullName = request.getParameter("fullName").trim();
+        if (fullName.length() == 0) {
+            String url;
+            if (!add) {
+                url = "resume?uuid="+uuid+"&action=edit";
+            } else {
+                url = "resume?action=add";
+            }
+            response.sendRedirect(url);
+            return;
+        }
+        Resume r;
+        if (add) {
+            r = new Resume(fullName);
+        }
+        else {
+            r = storage.get(uuid);
+            r.setFullName(fullName);
+        }
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
@@ -64,7 +91,39 @@ public class ResumeServlet extends HttpServlet {
                 r.getContacts().remove(type);
             }
         }
-        storage.update(r);
+        for (SectionType type : SectionType.values()) {
+            switch (type) {
+                case PERSONAL:
+                case OBJECTIVE:
+                    String value = request.getParameter(type.name());
+                    if (value != null && value.trim().length() != 0) {
+                        r.setSections(type, new TextSection(value.trim()));
+                    } else {
+                        r.setSections(type, new TextSection(""));
+                    }
+                    break;
+                case ACHIEVEMENT:
+                case QUALIFICATIONS:
+                    String[] values = request.getParameterValues(type.name());
+                    if (values != null && values.length != 0) {
+                        for (int i = 0; i < values.length; i++) {
+                            values[i] = values[i].trim();
+                        }
+                        r.setSections(type, new ListSection(Arrays.asList(values)));
+                    } else {
+                        r.addSection(type, new ListSection(new ArrayList<>()));
+                    }
+                    break;
+                case EDUCATION:
+                case EXPERIENCE:
+                    r.addSection(type, new OrganizationSection());
+            }
+        }
+        if (add) {
+            storage.save(r);
+        } else {
+            storage.update(r);
+        }
         response.sendRedirect("resume");
     }
 }

@@ -1,4 +1,4 @@
-<%@ page import="com.basejava.webapp.model.ContactType" %>
+<%@ page import="com.basejava.webapp.model.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -15,7 +15,7 @@
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
-            <dd><input type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
+            <dd><input required pattern="^[A-Za-zА-Яа-яЁё0-9 _]+$" type="text" name="fullName" size=50 value="${resume.fullName}"></dd>
         </dl>
         <h3>Контакты:</h3>
         <c:forEach var="type" items="<%=ContactType.values()%>">
@@ -25,9 +25,26 @@
             </dl>
         </c:forEach>
         <h3>Секции:</h3>
-        <input type="text" name="section" size=30 value="1"><br/>
-        <input type="text" name="section" size=30 value="2"><br/>
-        <input type="text" name="section" size=30 value="3"><br/>
+        <c:forEach var="type" items="<%=SectionType.values()%>">
+            <dl>
+                <dt>${type.title}</dt>
+                <c:set var="section" value="${resume.getSection(type)}"/>
+                <jsp:useBean id="section" type="com.basejava.webapp.model.AbstractSection"/>
+                <c:choose>
+                    <c:when test="${type == 'PERSONAL' || type == 'OBJECTIVE'}">
+                        <input type='text' name='${type.name()}' size=106 value='<%=section%>'>
+                    </c:when>
+                    <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATIONS'}">
+                        <textarea cols=80 rows=10 name='${type.name()}' ><%=section%></textarea>
+                    </c:when>
+                    <c:when test="${type == 'EDUCATION' || type == 'EXPERIENCE'}">
+                        <c:set var="organization" value="<%=((OrganizationSection) section).getContent()%>"/>
+                        <jsp:useBean id="organization" type="java.util.ArrayList"/>
+                        <textarea cols=80 rows=10 name='${type.name()}' disabled> <%=organization%> </textarea>
+                    </c:when>
+                </c:choose>
+            </dl>
+        </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
         <button onclick="window.history.back()">Отменить</button>

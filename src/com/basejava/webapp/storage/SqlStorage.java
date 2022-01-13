@@ -5,6 +5,7 @@ import com.basejava.webapp.model.*;
 import com.basejava.webapp.sql.SqlHelper;
 
 import java.sql.*;
+import java.time.YearMonth;
 import java.util.*;
 
 public class SqlStorage implements Storage {
@@ -181,6 +182,21 @@ public class SqlStorage implements Storage {
                     case QUALIFICATIONS:
                         ps.setString(3, String.join("\n", ((ListSection) section).getContent()));
                         break;
+                    case EDUCATION:
+                    case EXPERIENCE:
+                        String text = "";
+                        text = text + ((OrganizationSection) section).getContent().size() + "\n";
+                        for (Organization org : ((OrganizationSection) section).getContent()) {
+                            text = text + org.getName() + "\n";
+                            String url = org.getFullName().getUrl();
+                            text = text + (url == null ? "" : url) + "\n";
+                            text = text + org.getContent().size() + "\n";
+                            for (Organization.Experience exp : org.getContent()) {
+                                text += String.join("\n", (exp.getContent()));
+                            }
+                            text += "\n";
+                        }
+                        ps.setString(3, text);
                 }
                 ps.addBatch();
             }
@@ -199,7 +215,7 @@ public class SqlStorage implements Storage {
         String value = rs.getString("value");
         if (value != null) {
             String type = rs.getString("type");
-            SectionType sectionType = type.equals("Личные качества") ? SectionType.PERSONAL : SectionType.valueOf(type);
+            SectionType sectionType = type.equals("Личные качества") ? SectionType.PERSONAL : (type.equals("Опыт работы") ? SectionType.EXPERIENCE : SectionType.valueOf(type));
             switch (sectionType) {
                 case PERSONAL:
                 case OBJECTIVE:
@@ -209,6 +225,27 @@ public class SqlStorage implements Storage {
                 case QUALIFICATIONS:
                     r.addSection(sectionType, new ListSection(Arrays.asList(value.split("\n"))));
                     break;
+                case EDUCATION:
+                case EXPERIENCE:
+                    OrganizationSection organizations = new OrganizationSection();
+                    String[] values = value.split("\n");
+                    int k = 1;
+                    for (int i = 0; i < Integer.parseInt(values[0]); i++) {
+                        Organization org = new Organization(values[k], values[k + 1].equals("") ? null : values[k + 1]);
+                        k += 2;
+                        int sizeOrg =  Integer.parseInt(values[k++]);
+                        for (int j = 0; j < sizeOrg; j++) {
+                            YearMonth startDate = YearMonth.parse(values[k++]);
+                            YearMonth endDate = YearMonth.parse(values[k++]);
+                            String title = values[k++];
+                            String description = values[k].equals("null")? null : values[k];
+                            k++;
+                            Organization.Experience exp = new Organization.Experience(startDate, endDate, title, description);
+                            org.addContent(exp);
+                        }
+                        organizations.setContent(org);
+                    }
+                    r.addSection(sectionType, organizations);
             }
         }
     }

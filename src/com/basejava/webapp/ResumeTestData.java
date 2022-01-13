@@ -259,7 +259,7 @@ public class ResumeTestData {
         qualification.setContent("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2");
         qualification.setContent("Version control: Subversion, Git, Mercury, ClearCase, Perforce");
         resume.setSections(SectionType.QUALIFICATIONS, qualification);
-        /*Organization organization = new Organization("Organization", "url");
+        Organization organization = new Organization("Organization", "url");
         organization.addContent(new Organization.Experience(YearMonth.parse("2010-01"), YearMonth.parse("2010-05"), "title", "description"));
         OrganizationSection organizationSection = new OrganizationSection();
         organizationSection.setContent(organization);
@@ -268,12 +268,10 @@ public class ResumeTestData {
         organization.addContent(new Organization.Experience(YearMonth.parse("2001-01"), YearMonth.parse("2001-05"), "title", "description"));
         organizationSection = new OrganizationSection();
         organizationSection.setContent(organization);
-        resume.setSections(SectionType.EDUCATION, organizationSection);
         organization = new Organization("Education2", null);
         organization.addContent(new Organization.Experience(YearMonth.parse("2011-01"), YearMonth.parse("2011-05"), "title2", null));
-        organizationSection = new OrganizationSection();
         organizationSection.setContent(organization);
-        resume.setSections(SectionType.EDUCATION, organizationSection);*/
+        resume.setSections(SectionType.EDUCATION, organizationSection);
         return resume;
     }
 }

@@ -17,4 +17,8 @@ public enum SectionType {
     public String getTitle() {
         return title;
     }
+
+    public String toHtml() {
+        return title + ": ";
+    }
 }
