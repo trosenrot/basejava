@@ -35,7 +35,7 @@
                         <input type='text' name='${type.name()}' size=106 value='<%=section%>'>
                     </c:when>
                     <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATIONS'}">
-                        <textarea cols=80 rows=10 name='${type.name()}' ><%=section%></textarea>
+                        <textarea cols=80 rows=10 name='${type.name()}' ><%=section + "\n"%></textarea>
                     </c:when>
                     <c:when test="${type == 'EDUCATION' || type == 'EXPERIENCE'}">
                         <c:set var="organization" value="<%=((OrganizationSection) section).getContent()%>"/>
@@ -47,7 +47,7 @@
         </c:forEach>
         <hr>
         <button type="submit">Сохранить</button>
-        <button onclick="window.history.back()">Отменить</button>
+        <button type="reset" onclick="window.history.back()">Отменить</button>
     </form>
 </section>
 <jsp:include page="fragments/footer.jsp"/>

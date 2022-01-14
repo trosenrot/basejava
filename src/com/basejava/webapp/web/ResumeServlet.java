@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -106,10 +106,17 @@ public class ResumeServlet extends HttpServlet {
                 case QUALIFICATIONS:
                     String[] values = request.getParameterValues(type.name());
                     if (values != null && values.length != 0) {
+                        List<String> listValues = new ArrayList<>();
                         for (int i = 0; i < values.length; i++) {
-                            values[i] = values[i].trim();
+                            String[] arrValues = values[i].split("\n");
+                            for (int j = 0; j < arrValues.length; j++) {
+                                arrValues[j] = arrValues[j].trim();
+                                if (!arrValues[j].equals("") && !arrValues[j].equals("\r")){
+                                    listValues.add(arrValues[j]);
+                                }
+                            }
                         }
-                        r.setSections(type, new ListSection(Arrays.asList(values)));
+                        r.setSections(type, new ListSection(listValues));
                     } else {
                         r.addSection(type, new ListSection(new ArrayList<>()));
                     }

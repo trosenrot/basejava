@@ -39,10 +39,10 @@
                         <% } %>
                 </c:when>
                 <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATIONS'}"><ul>
-                    <% if (((ListSection)section).size()!=0 && !((ListSection)section).toString().equals("")) {%>
+                    <% if (((ListSection)section).size()!=0 && !((ListSection)section).toString().equals("\n")) {%>
                         <h3><%=type.getTitle()%></h3>
                         <c:forEach var="content" items="<%=((ListSection) section).getContent()%>">
-                            <li>${content}</li>
+                                <li>${content}</li>
                         </c:forEach><br/>
                     <% } %></ul>
                 </c:when>
