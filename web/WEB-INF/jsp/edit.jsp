@@ -1,4 +1,5 @@
 <%@ page import="com.basejava.webapp.model.*" %>
+<%@ page import="com.basejava.webapp.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -27,7 +28,7 @@
         <h3>Секции:</h3>
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <dl>
-                <dt>${type.title}</dt>
+                <dt><b>${type.title}</b></dt>
                         <c:set var="section" value="${resume.getSection(type)}"/>
                         <c:choose>
                             <c:when test="${section != null}">
@@ -40,9 +41,75 @@
                                         <textarea cols=80 rows=10 name='${type.name()}' ><%=section + "\n"%></textarea>
                                     </c:when>
                                     <c:when test="${type == 'EDUCATION' || type == 'EXPERIENCE'}">
-                                        <c:set var="organization" value="<%=((OrganizationSection) section).getContent()%>"/>
-                                        <jsp:useBean id="organization" type="java.util.ArrayList"/>
-                                        <textarea cols=80 rows=10 name='${type.name()}' disabled> <%=organization%> </textarea>
+                                        <c:forEach var="org" items="<%=((OrganizationSection) section).getContent()%>" varStatus="counter">
+                                            <dl>
+                                                <dt>Название:</dt>
+                                                <dd><input type="text" name='${type.name()}' size=106 value="${org.name} " placeholder="Введите название"></dd>
+                                            </dl>
+                                            <dl>
+                                                <dt>Сайт:</dt>
+                                                <dd><input type="text" name='${type.name()}url' size=106 value="${org.fullName.url}" placeholder="Введите сайт"></dd>
+                                            </dl><br>
+                                            <c:forEach var="exp" items="${org.content}">
+                                                <jsp:useBean id="exp" type="com.basejava.webapp.model.Organization.Experience"/>
+                                                <dl>
+                                                    <dt>Дата начала:</dt>
+                                                    <dd><input type="text" name='${type.name()}${counter.index}startDate' size=6 value="<%=exp.getStartDate()%>" placeholder="yyyy-MM"></dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>Дата окончания:</dt>
+                                                    <dd><input type="text" name='${type.name()}${counter.index}endDate' size=6 value="<%=exp.getEndDate()%>" placeholder="yyyy-MM"></dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>Должность:</dt>
+                                                    <dd><input type="text" name='${type.name()}${counter.index}title' size=106 value="${exp.title}" placeholder="Введите должность"></dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>Описание:</dt>
+                                                    <dd><textarea cols=80 rows=10 name='${type.name()}${counter.index}description' placeholder="Введите описание">${exp.description}</textarea></dd>
+                                                </dl>
+                                                </c:forEach>
+                                            <dl>
+                                                <dt>Дата начала:</dt>
+                                                <dd><input type="text" name='newStartDate' size=6 placeholder="yyyy-MM"></dd>
+                                            </dl>
+                                            <dl>
+                                                <dt>Дата окончания:</dt>
+                                                <dd><input type="text" name='newEndDate' size=6 placeholder="yyyy-MM"></dd>
+                                            </dl>
+                                            <dl>
+                                                <dt>Должность:</dt>
+                                                <dd><input type="text" name='newTitle' size=106 placeholder="Введите должность"></dd>
+                                            </dl>
+                                            <dl>
+                                                <dt>Описание:</dt>
+                                                <dd><textarea cols=80 rows=10 name='newDescription' placeholder="Введите описание"></textarea></dd>
+                                            </dl>
+                                        </c:forEach>
+                                        <dl>
+                                            <dt>Название:</dt>
+                                            <dd><input type="text" name='newOrgName' size=106 placeholder="Введите название"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Сайт:</dt>
+                                            <dd><input type="text" name='newOrgUrl' size=106 placeholder="Введите сайт"></dd>
+                                        </dl><br>
+                                        <dl>
+                                            <dt>Дата начала:</dt>
+                                            <dd><input type="text" name='newOrgStartDate' size=6 placeholder="yyyy-MM"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Дата окончания:</dt>
+                                            <dd><input type="text" name='newOrgEndDate' size=6 placeholder="yyyy-MM"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Должность:</dt>
+                                            <dd><input type="text" name='newOrgTitle' size=106 placeholder="Введите должность"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Описание:</dt>
+                                            <dd><textarea cols=80 rows=10 name='newOrgDescription' placeholder="Введите описание"></textarea></dd>
+                                        </dl>
                                     </c:when>
                                 </c:choose>
                             </c:when>
@@ -55,7 +122,30 @@
                                         <textarea cols=80 rows=10 name='${type.name()}'></textarea>
                                     </c:when>
                                     <c:when test="${type == 'EDUCATION' || type == 'EXPERIENCE'}">
-                                        <textarea cols=80 rows=10 name='${type.name()}' disabled></textarea>
+                                        <dl>
+                                            <dt>Название:</dt>
+                                            <dd><input type="text" name='newOrgName' size=106 placeholder="Введите название"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Сайт:</dt>
+                                            <dd><input type="text" name='newOrgUrl' size=106 placeholder="Введите сайт"></dd>
+                                        </dl><br>
+                                        <dl>
+                                            <dt>Дата начала:</dt>
+                                            <dd><input type="text" name='newOrgStartDate' size=6 placeholder="yyyy-MM"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Дата окончания:</dt>
+                                            <dd><input type="text" name='newOrgEndDate' size=6 placeholder="yyyy-MM"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Должность:</dt>
+                                            <dd><input type="text" name='newOrgTitle' size=106 placeholder="Введите должность"></dd>
+                                        </dl>
+                                        <dl>
+                                            <dt>Описание:</dt>
+                                            <dd><textarea cols=80 rows=10 name='newOrgDescription' placeholder="Введите описание"></textarea></dd>
+                                        </dl>
                                     </c:when>
                                 </c:choose>
                             </c:otherwise>

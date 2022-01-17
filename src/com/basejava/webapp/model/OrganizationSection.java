@@ -5,6 +5,7 @@ import java.util.List;
 
 public class OrganizationSection extends AbstractSection {
     private static final long serialVersionUID = 1L;
+    private List<Organization> content = new ArrayList<>();
 
     public OrganizationSection() {
     }
@@ -13,7 +14,9 @@ public class OrganizationSection extends AbstractSection {
         this.content.add(content);
     }
 
-    private List<Organization> content = new ArrayList<>();
+    public OrganizationSection(List<Organization> content) {
+        this.content = content;
+    }
 
     public void setContent(Organization content) {
         this.content.add(content);

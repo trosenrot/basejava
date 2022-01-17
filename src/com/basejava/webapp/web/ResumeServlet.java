@@ -3,6 +3,7 @@ package com.basejava.webapp.web;
 import com.basejava.webapp.Config;
 import com.basejava.webapp.model.*;
 import com.basejava.webapp.storage.Storage;
+import com.google.gson.JsonArray;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -10,11 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
+    private JsonArray HtmlUtil;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -123,7 +126,28 @@ public class ResumeServlet extends HttpServlet {
                     break;
                 case EDUCATION:
                 case EXPERIENCE:
-                    r.addSection(type, new OrganizationSection());
+                    List<Organization> orgs = new ArrayList<>();
+                    String[] urls = request.getParameterValues(type.name() + "url");
+                    String[] valuesOrg = request.getParameterValues(type.name());
+                    for (int i = 0; i < valuesOrg.length; i++) {
+                        String name = valuesOrg[i];
+                        if (name != null) {
+                            Organization org = new Organization(name, urls[i]);
+                            String counter = type.name() + i;
+                            String[] startDates = request.getParameterValues(counter + "startDate");
+                            String[] endDates = request.getParameterValues(counter + "endDate");
+                            String[] titles = request.getParameterValues(counter + "title");
+                            String[] descriptions = request.getParameterValues(counter + "description");
+                            for (int j = 0; j < titles.length; j++) {
+                                if (titles!=null) {
+                                    org.addContent(new Organization.Experience(YearMonth.parse(startDates[j]), YearMonth.parse(endDates[j]), titles[j], descriptions[j]));
+                                }
+                            }
+                            orgs.add(org);
+                        }
+                    }
+                    r.setSections(type, new OrganizationSection(orgs));
+                    break;
             }
         }
         if (add) {
