@@ -192,9 +192,8 @@ public class SqlStorage implements Storage {
                             text = text + (url == null ? "" : url) + "\n";
                             text = text + org.getContent().size() + "\n";
                             for (Organization.Experience exp : org.getContent()) {
-                                text += String.join("\n", (exp.getContent()));
+                                text = text + String.join("\n", (exp.getContent())) + "\n";
                             }
-                            text += "\n";
                         }
                         ps.setString(3, text);
                 }
@@ -233,12 +232,13 @@ public class SqlStorage implements Storage {
                     for (int i = 0; i < Integer.parseInt(values[0]); i++) {
                         Organization org = new Organization(values[k], values[k + 1].equals("") ? null : values[k + 1]);
                         k += 2;
-                        int sizeOrg =  Integer.parseInt(values[k++]);
+                        int sizeOrg = Integer.parseInt(values[k++]);
                         for (int j = 0; j < sizeOrg; j++) {
                             YearMonth startDate = YearMonth.parse(values[k++]);
-                            YearMonth endDate = YearMonth.parse(values[k++]);
+                            YearMonth endDate = values[k].equals("") ? null : YearMonth.parse(values[k]);
+                            k++;
                             String title = values[k++];
-                            String description = values[k].equals("null")? null : values[k];
+                            String description = values[k].equals("null") ? null : values[k];
                             k++;
                             Organization.Experience exp = new Organization.Experience(startDate, endDate, title, description);
                             org.addContent(exp);

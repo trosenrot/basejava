@@ -71,7 +71,7 @@ public class ResumeServlet extends HttpServlet {
         if (fullName.length() == 0) {
             String url;
             if (!add) {
-                url = "resume?uuid="+uuid+"&action=edit";
+                url = "resume?uuid=" + uuid + "&action=edit";
             } else {
                 url = "resume?action=add";
             }
@@ -81,8 +81,7 @@ public class ResumeServlet extends HttpServlet {
         Resume r;
         if (add) {
             r = new Resume(fullName);
-        }
-        else {
+        } else {
             r = storage.get(uuid);
             r.setFullName(fullName);
         }
@@ -114,7 +113,7 @@ public class ResumeServlet extends HttpServlet {
                             String[] arrValues = values[i].split("\n");
                             for (int j = 0; j < arrValues.length; j++) {
                                 arrValues[j] = arrValues[j].trim();
-                                if (!arrValues[j].equals("") && !arrValues[j].equals("\r")){
+                                if (!arrValues[j].equals("") && !arrValues[j].equals("\r")) {
                                     listValues.add(arrValues[j]);
                                 }
                             }
@@ -129,22 +128,45 @@ public class ResumeServlet extends HttpServlet {
                     List<Organization> orgs = new ArrayList<>();
                     String[] urls = request.getParameterValues(type.name() + "url");
                     String[] valuesOrg = request.getParameterValues(type.name());
-                    for (int i = 0; i < valuesOrg.length; i++) {
-                        String name = valuesOrg[i];
-                        if (name != null) {
-                            Organization org = new Organization(name, urls[i]);
-                            String counter = type.name() + i;
-                            String[] startDates = request.getParameterValues(counter + "startDate");
-                            String[] endDates = request.getParameterValues(counter + "endDate");
-                            String[] titles = request.getParameterValues(counter + "title");
-                            String[] descriptions = request.getParameterValues(counter + "description");
-                            for (int j = 0; j < titles.length; j++) {
-                                if (titles!=null) {
-                                    org.addContent(new Organization.Experience(YearMonth.parse(startDates[j]), YearMonth.parse(endDates[j]), titles[j], descriptions[j]));
+                    if (valuesOrg != null) {
+                        for (int i = 0; i < valuesOrg.length; i++) {
+                            String name = valuesOrg[i];
+                            if (name != null && !name.equals("")) {
+                                Organization org = new Organization(name, urls[i].equals("") ? null : urls[i]);
+                                String counter = type.name() + i;
+                                String[] startDates = request.getParameterValues(counter + "startDate");
+                                String[] endDates = request.getParameterValues(counter + "endDate");
+                                String[] titles = request.getParameterValues(counter + "title");
+                                String[] descriptions = request.getParameterValues(counter + "description");
+                                for (int j = 0; j < titles.length; j++) {
+                                    if (titles != null && !titles[j].equals("")) {
+                                        org.addContent(new Organization.Experience(YearMonth.parse(startDates[j]), endDates[j].equals("") ? null : YearMonth.parse(endDates[j]), titles[j], descriptions[j] == "" ? "null" : descriptions[j]));
+                                    }
                                 }
+                                String newTitle = request.getParameter(type.name() + "newTitle");
+                                if (newTitle != null && !newTitle.equals("")) {
+                                    String newDescription = request.getParameter(type.name() + "newDescription");
+                                    String newStartDate = request.getParameter(type.name() + "newStartDate");
+                                    String newEndDate = request.getParameter(type.name() + "newEndDate");
+                                    org.addContent(new Organization.Experience(YearMonth.parse(newStartDate), newEndDate.equals("") ? null : YearMonth.parse(newEndDate), newTitle, newDescription.equals("") ? "null" : newDescription));
+                                }
+                                orgs.add(org);
                             }
-                            orgs.add(org);
                         }
+                    }
+                    String newOrgName = request.getParameter(type.name() + "newOrgName");
+                    if (newOrgName != null && !newOrgName.equals("")) {
+                        String newOrgUrl = request.getParameter(type.name() + "newOrgUrl");
+                        Organization newOrg = new Organization(newOrgName, newOrgUrl.equals("") ? null : newOrgUrl);
+                        String newOrgTitle = request.getParameter(type.name() + "newOrgTitle");
+                        if (newOrgTitle != null && !newOrgTitle.equals("")) {
+                            String newOrgDescription = request.getParameter(type.name() + "newOrgDescription");
+                            String newOrgEndDate = request.getParameter(type.name() + "newOrgEndDate");
+                            newOrg.addContent(new Organization.Experience(YearMonth.parse(request.getParameter(type.name() + "newOrgStartDate")),
+                                    newOrgEndDate.equals("") ? null : YearMonth.parse(newOrgEndDate),
+                                    newOrgTitle, newOrgDescription.equals("") ? "null" : newOrgDescription));
+                        }
+                        orgs.add(newOrg);
                     }
                     r.setSections(type, new OrganizationSection(orgs));
                     break;

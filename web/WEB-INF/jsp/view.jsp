@@ -60,7 +60,7 @@
                             </c:choose>
                             <c:forEach var="content" items="${organization.content}">
                                 <jsp:useBean id="content" type="com.basejava.webapp.model.Organization.Experience"/>
-                                <ul>${content.startDate}-${content.endDate}<br>
+                                <ul>${content.startDate}-${content.endDate == null ? "по настоящее время" : content.endDate}<br>
                                 <b>${content.title}</b><br>${content.description}</ul>
                             </c:forEach>
                         </c:forEach><br/>

@@ -96,7 +96,7 @@ public class Organization implements Serializable {
         public List<String> getContent() {
             List<String> array = new ArrayList<>();
             array.add(startDate.toString());
-            array.add(endDate.toString());
+            array.add(endDate == null ? "" : endDate.toString());
             array.add(title);
             array.add(description);
             return array;

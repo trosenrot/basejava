@@ -43,7 +43,7 @@
                                     <c:when test="${type == 'EDUCATION' || type == 'EXPERIENCE'}">
                                         <c:forEach var="org" items="<%=((OrganizationSection) section).getContent()%>" varStatus="counter">
                                             <dl>
-                                                <dt>Название:</dt>
+                                                <dt><u>Название:</u></dt>
                                                 <dd><input type="text" name='${type.name()}' size=106 value="${org.name} " placeholder="Введите название"></dd>
                                             </dl>
                                             <dl>
@@ -54,11 +54,11 @@
                                                 <jsp:useBean id="exp" type="com.basejava.webapp.model.Organization.Experience"/>
                                                 <dl>
                                                     <dt>Дата начала:</dt>
-                                                    <dd><input type="text" name='${type.name()}${counter.index}startDate' size=6 value="<%=exp.getStartDate()%>" placeholder="yyyy-MM"></dd>
+                                                    <dd><input type="text" name='${type.name()}${counter.index}startDate' size=6 value="<%=exp.getStartDate()%>" placeholder="yyyy-MM" pattern="[0-9]{4}-[0-9]{2}"></dd>
                                                 </dl>
                                                 <dl>
                                                     <dt>Дата окончания:</dt>
-                                                    <dd><input type="text" name='${type.name()}${counter.index}endDate' size=6 value="<%=exp.getEndDate()%>" placeholder="yyyy-MM"></dd>
+                                                    <dd><input type="text" name='${type.name()}${counter.index}endDate' size=6 value="<%=exp.getEndDate()%>" placeholder="yyyy-MM" pattern="[0-9]{4}-[0-9]{2}"></dd>
                                                 </dl>
                                                 <dl>
                                                     <dt>Должность:</dt>
@@ -71,44 +71,44 @@
                                                 </c:forEach>
                                             <dl>
                                                 <dt>Дата начала:</dt>
-                                                <dd><input type="text" name='newStartDate' size=6 placeholder="yyyy-MM"></dd>
+                                                <dd><input type="text" name='${type.name()}newStartDate' size=6 placeholder="yyyy-MM" pattern="[0-9]{4}-[0-9]{2}"></dd>
                                             </dl>
                                             <dl>
                                                 <dt>Дата окончания:</dt>
-                                                <dd><input type="text" name='newEndDate' size=6 placeholder="yyyy-MM"></dd>
+                                                <dd><input type="text" name='${type.name()}newEndDate' size=6 placeholder="yyyy-MM" pattern="[0-9]{4}-[0-9]{2}"></dd>
                                             </dl>
                                             <dl>
                                                 <dt>Должность:</dt>
-                                                <dd><input type="text" name='newTitle' size=106 placeholder="Введите должность"></dd>
+                                                <dd><input type="text" name='${type.name()}newTitle' size=106 placeholder="Введите должность"></dd>
                                             </dl>
                                             <dl>
                                                 <dt>Описание:</dt>
-                                                <dd><textarea cols=80 rows=10 name='newDescription' placeholder="Введите описание"></textarea></dd>
+                                                <dd><textarea cols=80 rows=10 name='${type.name()}newDescription' placeholder="Введите описание"></textarea></dd>
                                             </dl>
                                         </c:forEach>
                                         <dl>
-                                            <dt>Название:</dt>
-                                            <dd><input type="text" name='newOrgName' size=106 placeholder="Введите название"></dd>
+                                            <dt><u>Название:</u></dt>
+                                            <dd><input type="text" name='${type.name()}newOrgName' size=106 placeholder="Введите название"></dd>
                                         </dl>
                                         <dl>
                                             <dt>Сайт:</dt>
-                                            <dd><input type="text" name='newOrgUrl' size=106 placeholder="Введите сайт"></dd>
+                                            <dd><input type="text" name='${type.name()}newOrgUrl' size=106 placeholder="Введите сайт"></dd>
                                         </dl><br>
                                         <dl>
                                             <dt>Дата начала:</dt>
-                                            <dd><input type="text" name='newOrgStartDate' size=6 placeholder="yyyy-MM"></dd>
+                                            <dd><input type="text" name='${type.name()}newOrgStartDate' size=6 placeholder="yyyy-MM" pattern="[0-9]{4}-[0-9]{2}"></dd>
                                         </dl>
                                         <dl>
                                             <dt>Дата окончания:</dt>
-                                            <dd><input type="text" name='newOrgEndDate' size=6 placeholder="yyyy-MM"></dd>
+                                            <dd><input type="text" name='${type.name()}newOrgEndDate' size=6 placeholder="yyyy-MM" pattern="[0-9]{4}-[0-9]{2}"></dd>
                                         </dl>
                                         <dl>
                                             <dt>Должность:</dt>
-                                            <dd><input type="text" name='newOrgTitle' size=106 placeholder="Введите должность"></dd>
+                                            <dd><input type="text" name='${type.name()}newOrgTitle' size=106 placeholder="Введите должность"></dd>
                                         </dl>
                                         <dl>
                                             <dt>Описание:</dt>
-                                            <dd><textarea cols=80 rows=10 name='newOrgDescription' placeholder="Введите описание"></textarea></dd>
+                                            <dd><textarea cols=80 rows=10 name='${type.name()}newOrgDescription' placeholder="Введите описание"></textarea></dd>
                                         </dl>
                                     </c:when>
                                 </c:choose>
